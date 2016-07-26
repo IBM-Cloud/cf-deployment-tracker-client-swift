@@ -14,18 +14,4 @@
  * limitations under the License.
  **/
 
-import PackageDescription
-
-let package = Package(
-    name: "CloudFoundryDeploymentTracker",
-    targets: [
-      Target(
-        name: "CloudFoundryDeploymentTracker",
-        dependencies: []
-      ),
-    ],
-    dependencies: [
-      .Package(url: "https://github.com/IBM-Swift/Swift-cfenv.git", majorVersion: 1, minor: 4)
-    ],
-    testDependencies: []
-)
+ import Foundation
