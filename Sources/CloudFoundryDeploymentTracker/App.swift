@@ -77,7 +77,7 @@ public struct CloudFoundryDeploymentTracker {
           if var serviceStats = serviceDictionary[service.label] {
             
             serviceStats["count"].intValue = serviceStats["count"].intValue + 1
-            var plans = serviceStats["plans"].arrayObject as! [String]
+            var plans = serviceStats["plans"].arrayValue.map { $0.stringValue }            
             plans.append(service.plan)
             serviceStats["plans"] = JSON(Array(Set(plans)))
             serviceDictionary[service.label] = serviceStats
