@@ -24,31 +24,56 @@ public enum DeploymentTrackerError: ErrorProtocol {
 
 public struct CloudFoundryDeploymentTracker {
 
-  public static func track() throws {
+  var appEnv: AppEnv?
 
-	  let appEnv = try CloudFoundryEnv.getAppEnv()
-	  print("The port: \(appEnv.port)")
+  public init() {
+    do {
+      appEnv = try CloudFoundryEnv.getAppEnv()
+    } catch {
+      print("Couldn't get Cloud Foundry App environment instance.")
+    }
+  }
 
-	  var jsonEvent = JSON([:])
-	  guard let vcapApplication = appEnv.getApp() else {
-	  	throw DeploymentTrackerError.UnavailableInfo("Failed to get Cloud Foundry App instance.")
-	  }
+  public init(appEnv: AppEnv) {
+    self.appEnv = appEnv
+  }
 
-	  let dateFormatter = DateFormatter()
-	  dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-	  print("THE date: \(dateFormatter.string(from: Date()))")
-	  jsonEvent["date_sent"].stringValue = dateFormatter.string(from: Date())
+  public func track() {
 
-	  jsonEvent["application_name"].stringValue = vcapApplication.name
-	  jsonEvent["space_id"].stringValue = vcapApplication.spaceId
-	  jsonEvent["application_version"].stringValue = vcapApplication.version
-	  jsonEvent["application_uris"].arrayObject = vcapApplication.uris
+    if let appEnv = appEnv, trackerJson = buildTrackerJson(appEnv: appEnv) {
+      // do post request
+      print("trackerJson: \(trackerJson)")
+    } else {
+      // log Error
+      return
+    }
 
-	  let services = appEnv.getServices()
-	  if services.count > 0 {
-	  	
-	  }
+  }
 
+  public func buildTrackerJson(appEnv: AppEnv) -> JSON? {
+
+      var jsonEvent = JSON([:])
+      guard let vcapApplication = appEnv.getApp() else {
+        print("Couldn't get Cloud Foundry App instance.")
+        return nil
+      }
+
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+      print("THE date: \(dateFormatter.string(from: Date()))")
+      jsonEvent["date_sent"].stringValue = dateFormatter.string(from: Date())
+
+      jsonEvent["application_name"].stringValue = vcapApplication.name
+      jsonEvent["space_id"].stringValue = vcapApplication.spaceId
+      jsonEvent["application_version"].stringValue = vcapApplication.version
+      let urisJson = JSON(vcapApplication.uris)
+      jsonEvent["application_uris"] = urisJson
+
+      let services = appEnv.getServices()
+      if services.count > 0 {
+        
+      }
+      return jsonEvent
   }
 
 }
