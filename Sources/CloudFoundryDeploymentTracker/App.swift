@@ -60,9 +60,9 @@ public struct CloudFoundryDeploymentTracker {
 
       let dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-      print("THE date: \(dateFormatter.string(from: Date()))")
       jsonEvent["date_sent"].stringValue = dateFormatter.string(from: Date())
 
+      jsonEvent["runtime"].stringValue = "swift"
       jsonEvent["application_name"].stringValue = vcapApplication.name
       jsonEvent["space_id"].stringValue = vcapApplication.spaceId
       jsonEvent["application_version"].stringValue = vcapApplication.version
@@ -71,7 +71,23 @@ public struct CloudFoundryDeploymentTracker {
 
       let services = appEnv.getServices()
       if services.count > 0 {
-        
+        var serviceDictionary = [String : JSON]()
+        for (_, service) in services {
+          
+          if var serviceStats = serviceDictionary[service.label] {
+            
+            serviceStats["count"].intValue = serviceStats["count"].intValue + 1
+            var plans = serviceStats["plans"].arrayObject as! [String]
+            plans.append(service.plan)
+            serviceStats["plans"] = JSON(Array(Set(plans)))
+            serviceDictionary[service.label] = serviceStats
+          } else {
+            
+            let newService = JSON(["count" : 1, "plans" : [service.plan]])
+            serviceDictionary[service.label] = newService
+          }
+        }
+        jsonEvent["bound_vcap_services"] = JSON(serviceDictionary)
       }
       return jsonEvent
   }
