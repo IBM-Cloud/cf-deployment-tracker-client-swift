@@ -29,7 +29,7 @@ public struct CloudFoundryDeploymentTracker {
   var appEnv: AppEnv?
 
   public init() {
-    Log.logger = HeliumLogger()
+    initLogger()
     do {
       appEnv = try CloudFoundryEnv.getAppEnv()
     } catch {
@@ -38,8 +38,14 @@ public struct CloudFoundryDeploymentTracker {
   }
 
   public init(appEnv: AppEnv) {
-    Log.logger = HeliumLogger()
+    initLogger()
     self.appEnv = appEnv
+  }
+  
+  private func initLogger() {
+    if Log.logger == nil {
+      Log.logger = HeliumLogger()
+    }
   }
 
   public func track() {
