@@ -42,7 +42,7 @@ public struct CloudFoundryDeploymentTracker {
     initLogger()
     self.appEnv = appEnv
   }
-  
+
   private func initLogger() {
     if Log.logger == nil {
       Log.logger = HeliumLogger()
@@ -54,14 +54,14 @@ public struct CloudFoundryDeploymentTracker {
     if let appEnv = appEnv, trackerJson = buildTrackerJson(appEnv: appEnv), jsonString = trackerJson.rawString() {
       // do post request
       print("trackerJson: \(trackerJson)")
-      
+
       var requestOptions: [ClientRequest.Options] = []
       requestOptions.append(.method("POST"))
       requestOptions.append(.schema("https://"))
       requestOptions.append(.hostname("deployment-tracker.mybluemix.net"))
       requestOptions.append(.port(443))
       requestOptions.append(.path("/api/v1/track"))
-      
+
       let req = HTTP.request(requestOptions) { response in
         if let response = response where response.statusCode == HTTPStatusCode.OK || response.statusCode == HTTPStatusCode.accepted {
           Log.info("Uploaded stats \(response.status)")
@@ -73,13 +73,13 @@ public struct CloudFoundryDeploymentTracker {
           } catch {
             Log.error("Bad JSON doc received from deployment tracker.")
           }
-          
+
         } else {
           Log.error("Failed to send tracking data with status code: \(response?.status)")
         }
       }
       req.end(jsonString)
-      
+
     } else {
       Log.error("Failed to build valid JSON for deployment tracker.")
       return
@@ -110,16 +110,16 @@ public struct CloudFoundryDeploymentTracker {
       if services.count > 0 {
         var serviceDictionary = [String : JSON]()
         for (_, service) in services {
-          
+
           if var serviceStats = serviceDictionary[service.label] {
-            
+
             serviceStats["count"].intValue = serviceStats["count"].intValue + 1
-            var plans = serviceStats["plans"].arrayValue.map { $0.stringValue }            
+            var plans = serviceStats["plans"].arrayValue.map { $0.stringValue }
             plans.append(service.plan)
             serviceStats["plans"] = JSON(Array(Set(plans)))
             serviceDictionary[service.label] = serviceStats
           } else {
-            
+
             let newService = JSON(["count" : 1, "plans" : [service.plan]])
             serviceDictionary[service.label] = newService
           }
