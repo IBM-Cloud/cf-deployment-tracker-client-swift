@@ -17,6 +17,8 @@
 import Foundation
 import CloudFoundryEnv
 import SwiftyJSON
+import HeliumLogger
+import LoggerAPI
 
 public enum DeploymentTrackerError: ErrorProtocol {
   case UnavailableInfo(String)
@@ -27,14 +29,16 @@ public struct CloudFoundryDeploymentTracker {
   var appEnv: AppEnv?
 
   public init() {
+    Log.logger = HeliumLogger()
     do {
       appEnv = try CloudFoundryEnv.getAppEnv()
     } catch {
-      print("Couldn't get Cloud Foundry App environment instance.")
+      Log.warning("Couldn't get Cloud Foundry App environment instance.")
     }
   }
 
   public init(appEnv: AppEnv) {
+    Log.logger = HeliumLogger()
     self.appEnv = appEnv
   }
 
@@ -43,6 +47,8 @@ public struct CloudFoundryDeploymentTracker {
     if let appEnv = appEnv, trackerJson = buildTrackerJson(appEnv: appEnv) {
       // do post request
       print("trackerJson: \(trackerJson)")
+      let _ = "https://deployment-tracker.mybluemix.net/api/v1/track"
+      
     } else {
       // log Error
       return
@@ -54,7 +60,7 @@ public struct CloudFoundryDeploymentTracker {
 
       var jsonEvent = JSON([:])
       guard let vcapApplication = appEnv.getApp() else {
-        print("Couldn't get Cloud Foundry App instance.")
+        Log.warning("Couldn't get Cloud Foundry App instance.")
         return nil
       }
 
