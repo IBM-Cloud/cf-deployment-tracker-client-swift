@@ -1,0 +1,8 @@
+# docker-compose up
+app:
+  image: ibmcom/kitura-ubuntu:latest
+  ports:
+    - "8090:8090"
+  volumes:
+    - .:/root/cf-deployment-tracker-client-swift
+  command: bash -c "cd /root/cf-deployment-tracker-client-swift && rm -rf Packages && swift build --clean && swift build && swift test"
