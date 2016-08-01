@@ -19,6 +19,7 @@ import CloudFoundryEnv
 import SwiftyJSON
 import HeliumLogger
 import LoggerAPI
+import KituraNet
 
 public enum DeploymentTrackerError: ErrorProtocol {
   case UnavailableInfo(String)
@@ -50,13 +51,37 @@ public struct CloudFoundryDeploymentTracker {
 
   public func track() {
 
-    if let appEnv = appEnv, trackerJson = buildTrackerJson(appEnv: appEnv) {
+    if let appEnv = appEnv, trackerJson = buildTrackerJson(appEnv: appEnv), jsonString = trackerJson.rawString() {
       // do post request
       print("trackerJson: \(trackerJson)")
-      let _ = "https://deployment-tracker.mybluemix.net/api/v1/track"
+      
+      var requestOptions: [ClientRequest.Options] = []
+      requestOptions.append(.method("POST"))
+      requestOptions.append(.schema("https://"))
+      requestOptions.append(.hostname("deployment-tracker.mybluemix.net"))
+      requestOptions.append(.port(443))
+      requestOptions.append(.path("/api/v1/track"))
+      
+      let req = HTTP.request(requestOptions) { response in
+        if let response = response where response.statusCode == HTTPStatusCode.OK || response.statusCode == HTTPStatusCode.accepted {
+          Log.info("Uploaded stats \(response.status)")
+          do {
+            let body = NSMutableData()
+            try response.readAllData(into: body)
+            let jsonResponse = JSON(data: body)
+            Log.info("Deployment Tracker response: \(jsonResponse)")
+          } catch {
+            Log.error("Bad JSON doc received from deployment tracker.")
+          }
+          
+        } else {
+          Log.error("Failed to send tracking data with status code: \(response?.status)")
+        }
+      }
+      req.end(jsonString)
       
     } else {
-      // log Error
+      Log.error("Failed to build valid JSON for deployment tracker.")
       return
     }
 
