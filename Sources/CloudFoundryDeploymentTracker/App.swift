@@ -53,12 +53,12 @@ public struct CloudFoundryDeploymentTracker {
 
     if let appEnv = appEnv, trackerJson = buildTrackerJson(appEnv: appEnv), jsonString = trackerJson.rawString() {
       // do post request
-      print("trackerJson: \(trackerJson)")
+      print("trackerJson: \(trackerJson.rawValue)")
 
       var requestOptions: [ClientRequest.Options] = []
       requestOptions.append(.method("POST"))
       requestOptions.append(.schema("https://"))
-      requestOptions.append(.hostname("deployment-tracker.mybluemix.net"))
+      requestOptions.append(.hostname("deployment-tracker-swift.mybluemix.net"))
       requestOptions.append(.port(443))
       requestOptions.append(.path("/api/v1/track"))
 
@@ -99,6 +99,9 @@ public struct CloudFoundryDeploymentTracker {
       dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
       jsonEvent["date_sent"].stringValue = dateFormatter.string(from: Date())
 
+      jsonEvent["code_version"].stringValue = "0.1"
+      jsonEvent["repository_url"].stringValue = "https://github.com/IBM-Swift/Kitura-Starter-Bluemix.git"
+
       jsonEvent["runtime"].stringValue = "swift"
       jsonEvent["application_name"].stringValue = vcapApplication.name
       jsonEvent["space_id"].stringValue = vcapApplication.spaceId
@@ -123,8 +126,22 @@ public struct CloudFoundryDeploymentTracker {
             let newService = JSON(["count" : 1, "plans" : [service.plan]])
             serviceDictionary[service.label] = newService
           }
+
+          // TODO: Test more
+          /*if var serviceJson = serviceDictionary[service.label] {
+            let planArray = serviceJson["plans"].arrayValue
+            print("planArray: \(planArray)")
+            let filteredPlans = planArray.filter { $0 == "N/A" }
+            if planArray.count == 0 || (filteredPlans.count > 0 && filteredPlans.count == planArray.count) {
+              print("no plans, delete value")
+              let _ = serviceJson.dictionaryObject?.removeValue(forKey: "plans")
+              serviceDictionary[service.label] = serviceJson
+            }
+          }*/
+
         }
         jsonEvent["bound_vcap_services"] = JSON(serviceDictionary)
+        // print("serviceDict: \(jsonEvent["bound_vcap_services"].rawValue)")
       }
       return jsonEvent
   }
