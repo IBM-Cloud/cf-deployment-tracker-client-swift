@@ -53,7 +53,8 @@ public struct CloudFoundryDeploymentTracker {
 
     if let appEnv = appEnv, trackerJson = buildTrackerJson(appEnv: appEnv), jsonString = trackerJson.rawString() {
       // do post request
-      print("trackerJson: \(trackerJson.rawValue)")
+      Log.verbose("trackerJson: \(trackerJson.rawValue)")
+      Log.verbose("jsonString: \(jsonString)")
 
       var requestOptions: [ClientRequest.Options] = []
       requestOptions.append(.method("POST"))
@@ -61,6 +62,9 @@ public struct CloudFoundryDeploymentTracker {
       requestOptions.append(.hostname("deployment-tracker-swift.mybluemix.net"))
       requestOptions.append(.port(443))
       requestOptions.append(.path("/api/v1/track"))
+      let headers = ["Content-Type": "application/json"]
+      requestOptions.append(.headers(headers))
+      Log.verbose("OPTIONS: \(requestOptions)")
 
       let req = HTTP.request(requestOptions) { response in
         if let response = response where response.statusCode == HTTPStatusCode.OK || response.statusCode == HTTPStatusCode.accepted {
@@ -96,7 +100,11 @@ public struct CloudFoundryDeploymentTracker {
       }
 
       let dateFormatter = DateFormatter()
-      dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+      dateFormatter.calendar = Calendar(identifier: .ISO8601)
+      dateFormatter.locale = Locale(localeIdentifier: "en_US_POSIX")
+      dateFormatter.timeZone = TimeZone(forSecondsFromGMT: 0)
+      dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
+      // dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
       jsonEvent["date_sent"].stringValue = dateFormatter.string(from: Date())
 
       jsonEvent["code_version"].stringValue = "0.1"
