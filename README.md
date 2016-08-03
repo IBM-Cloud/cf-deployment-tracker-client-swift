@@ -2,7 +2,9 @@
 [![Platform][platform-badge]][platform-url]
 
 # Overview
-The cf deployment tracker for Swift is a package used to track number of deployments to Bluemix for a particular Swift project. This Swift package requires little setup and will allow IBMers to view deployment stats on the [Deployment Tracker](https://deployment-tracker.mybluemix.net/stats), for their demo/tutorial projects.
+The cf deployment tracker for Swift is a package used to track number of deployments to Bluemix for a particular Swift project. This Swift package requires little setup and will allow IBMers to view deployment stats on the [Deployment Tracker](https://deployment-tracker.mybluemix.net/stats), for their demo/tutorial projects. Plus, you can include a deployment count badge in your project's Readme: 
+
+![Deployment badge example](badge.png "Deployment Badge")
 
 ## Swift version
 
