@@ -129,6 +129,7 @@ public struct CloudFoundryDeploymentTracker {
       jsonEvent["runtime"].stringValue = "swift"
       jsonEvent["application_name"].stringValue = vcapApplication.name
       jsonEvent["space_id"].stringValue = vcapApplication.spaceId
+      jsonEvent["application_id"].stringValue = vcapApplication.id
       jsonEvent["application_version"].stringValue = vcapApplication.version
       let urisJson = JSON(vcapApplication.uris)
       jsonEvent["application_uris"] = urisJson
