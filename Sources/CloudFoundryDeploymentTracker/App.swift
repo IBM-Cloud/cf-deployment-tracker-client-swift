@@ -147,21 +147,8 @@ public struct CloudFoundryDeploymentTracker {
             serviceDictionary[service.label] = newService
           }
 
-          // TODO: Test more
-          /*if var serviceJson = serviceDictionary[service.label] {
-            let planArray = serviceJson["plans"].arrayValue
-            print("planArray: \(planArray)")
-            let filteredPlans = planArray.filter { $0 == "N/A" }
-            if planArray.count == 0 || (filteredPlans.count > 0 && filteredPlans.count == planArray.count) {
-              print("no plans, delete value")
-              let _ = serviceJson.dictionaryObject?.removeValue(forKey: "plans")
-              serviceDictionary[service.label] = serviceJson
-            }
-          }*/
-
         }
         jsonEvent["bound_vcap_services"] = JSON(serviceDictionary)
-        // print("serviceDict: \(jsonEvent["bound_vcap_services"].rawValue)")
       }
       return jsonEvent
   }
