@@ -28,8 +28,12 @@ public enum DeploymentTrackerError: ErrorProtocol {
 public struct CloudFoundryDeploymentTracker {
 
   var appEnv: AppEnv?
+  var repositoryURL: String
+  var codeVersion: String?
 
-  public init() {
+  public init(repositoryURL: String, codeVersion: String?) {
+    self.repositoryURL = repositoryURL
+    self.codeVersion = codeVersion
     initLogger()
     do {
       appEnv = try CloudFoundryEnv.getAppEnv()
@@ -38,7 +42,9 @@ public struct CloudFoundryDeploymentTracker {
     }
   }
 
-  public init(appEnv: AppEnv) {
+  public init(appEnv: AppEnv, repositoryURL: String, codeVersion: String?) {
+    self.repositoryURL = repositoryURL
+    self.codeVersion = codeVersion
     initLogger()
     self.appEnv = appEnv
   }
@@ -111,8 +117,10 @@ public struct CloudFoundryDeploymentTracker {
       dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
       jsonEvent["date_sent"].stringValue = dateFormatter.string(from: Date())
 
-      jsonEvent["code_version"].stringValue = "0.1"
-      jsonEvent["repository_url"].stringValue = "https://github.com/IBM-Swift/Kitura-Starter-Bluemix.git"
+      if let codeVersion = self.codeVersion {
+        jsonEvent["code_version"].stringValue = codeVersion
+      }
+      jsonEvent["repository_url"].stringValue = repositoryURL
 
       jsonEvent["runtime"].stringValue = "swift"
       jsonEvent["application_name"].stringValue = vcapApplication.name
