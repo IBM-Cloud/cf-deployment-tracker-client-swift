@@ -55,12 +55,11 @@ public struct CloudFoundryDeploymentTracker {
     }
   }
 
+  
+  /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
 
     if let appEnv = appEnv, trackerJson = buildTrackerJson(appEnv: appEnv), jsonString = trackerJson.rawString() {
-
-      Log.verbose("trackerJson: \(trackerJson.rawValue)")
-      Log.verbose("jsonString: \(jsonString)")
 
       var requestOptions: [ClientRequest.Options] = []
       requestOptions.append(.method("POST"))
@@ -96,6 +95,11 @@ public struct CloudFoundryDeploymentTracker {
 
   }
 
+  /// Helper method to build Json in a valid format for tracking service
+  ///
+  /// - parameter appEnv: application environment to pull Bluemix app data from
+  ///
+  /// - returns: JSON, assuming we have access to application info
   public func buildTrackerJson(appEnv: AppEnv) -> JSON? {
 
       var jsonEvent = JSON([:])
