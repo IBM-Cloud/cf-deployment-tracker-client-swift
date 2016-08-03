@@ -59,7 +59,7 @@ This Swift application includes code to track deployments to [IBM Bluemix](https
 This data is collected from the parameters of the `CloudFoundryDeploymentTracker`, the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Bluemix and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
 
 ## Disabling Deployment Tracking
-Please see the README for the sample application that includes this package for instructions on disabling deployment tracking, as the instructions may vary based on the sample application in which this package is included.
+Please see the README for the sample application (i.e. [Kitura-Starter-Bluemix](https://github.com/IBM-Swift/Kitura-Starter-Bluemix)) that includes this package for instructions on disabling deployment tracking, as the instructions may vary based on the sample application in which this package is included.
 
 ## License
 This Swift package is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
