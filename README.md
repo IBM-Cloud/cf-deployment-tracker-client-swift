@@ -23,7 +23,7 @@ You can download different versions of the Swift binaries by following this [lin
 	     ...
 
 	     dependencies: [
-	         .Package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift", majorVersion: 0, minor: 1),
+	         .Package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", majorVersion: 0, minor: 1),
 
 	         ...
 
