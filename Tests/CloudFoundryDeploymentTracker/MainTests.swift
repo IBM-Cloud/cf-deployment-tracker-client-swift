@@ -55,11 +55,7 @@ class MainTests: XCTestCase {
   }
 
   func loadJsonOptions(options: String) {
-    #if os(OSX)
-      let data = options.data(using: String.Encoding.utf8)
-    #else
-      let data = options.data(using: NSUTF8StringEncoding)
-    #endif
+    let data = options.data(using: String.Encoding.utf8)
     jsonOptions = JSON(data: data!) // should never fail using hard coded Json
   }
 
