@@ -8,7 +8,7 @@ The cf deployment tracker for Swift is a package used to track number of deploym
 ![Deployment badge example](badge.png "Deployment Badge")
 
 ## Swift version
-- The 0.1.x releases were tested on OS X and Linux using the Swift `DEVELOPMENT-SNAPSHOT-2016-06-20-a` binaries.
+- The 0.1.x releases were tested on OS X and Linux using the Swift `DEVELOPMENT-SNAPSHOT-2016-07-25-a` binaries.
 
 You can download different versions of the Swift binaries by following this [link](https://swift.org/download/).
 
