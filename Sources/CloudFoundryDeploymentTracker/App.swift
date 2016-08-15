@@ -85,7 +85,7 @@ public struct CloudFoundryDeploymentTracker {
       req.end(jsonString)
 
     } else {
-      Log.error("Failed to build valid JSON for deployment tracker.")
+      Log.warning("Failed to build valid JSON for deployment tracker.")
       return
     }
 
