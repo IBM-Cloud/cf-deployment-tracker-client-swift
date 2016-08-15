@@ -21,10 +21,6 @@ import HeliumLogger
 import LoggerAPI
 import KituraNet
 
-public enum DeploymentTrackerError: ErrorProtocol {
-  case UnavailableInfo(String)
-}
-
 public struct CloudFoundryDeploymentTracker {
 
   var appEnv: AppEnv?
@@ -59,7 +55,7 @@ public struct CloudFoundryDeploymentTracker {
   /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
 
-    if let appEnv = appEnv, trackerJson = buildTrackerJson(appEnv: appEnv), jsonString = trackerJson.rawString() {
+    if let appEnv = appEnv, let trackerJson = buildTrackerJson(appEnv: appEnv), let jsonString = trackerJson.rawString() {
 
       var requestOptions: [ClientRequest.Options] = []
       requestOptions.append(.method("POST"))
@@ -71,11 +67,11 @@ public struct CloudFoundryDeploymentTracker {
       requestOptions.append(.headers(headers))
 
       let req = HTTP.request(requestOptions) { response in
-        if let response = response where response.statusCode == HTTPStatusCode.OK || response.statusCode == HTTPStatusCode.created {
+        if let response = response , response.statusCode == HTTPStatusCode.OK || response.statusCode == HTTPStatusCode.created {
           Log.info("Uploaded stats \(response.status)")
           do {
-            let body = NSMutableData()
-            try response.readAllData(into: body)
+            var body = Data()
+            try response.readAllData(into: &body)
             let jsonResponse = JSON(data: body)
             Log.info("Deployment Tracker response: \(jsonResponse.rawValue)")
           } catch {
@@ -110,9 +106,9 @@ public struct CloudFoundryDeploymentTracker {
 
       let dateFormatter = DateFormatter()
       #if os(OSX)
-        dateFormatter.calendar = Calendar(identifier: .ISO8601)
-        dateFormatter.locale = Locale(localeIdentifier: "en_US_POSIX")
-        dateFormatter.timeZone = TimeZone(forSecondsFromGMT: 0)
+        dateFormatter.calendar = Calendar(identifier: .iso8601)
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
       #else
         dateFormatter.calendar = NSCalendar(identifier: NSCalendarIdentifierISO8601)
         dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
