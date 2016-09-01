@@ -110,8 +110,8 @@ public struct CloudFoundryDeploymentTracker {
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
       #else
-        dateFormatter.calendar = Calendar(identifier: NSCalendarIdentifierISO8601)
-        dateFormatter.locale = Locale(localeIdentifier: "en_US_POSIX")
+        dateFormatter.calendar = Calendar(identifier: .iso8601)
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
       #endif
       dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
