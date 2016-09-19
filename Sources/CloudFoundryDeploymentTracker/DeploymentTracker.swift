@@ -51,7 +51,7 @@ public struct CloudFoundryDeploymentTracker {
     }
   }
 
-  
+
   /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
 
@@ -106,11 +106,11 @@ public struct CloudFoundryDeploymentTracker {
 
       let dateFormatter = DateFormatter()
       #if os(OSX)
-        dateFormatter.calendar = Calendar(identifier: .iso8601)
+        //dateFormatter.calendar = Calendar(identifier: .iso8601)
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
       #else
-        dateFormatter.calendar = Calendar(identifier: .iso8601)
+        //dateFormatter.calendar = Calendar(identifier: .iso8601)
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
       #endif
