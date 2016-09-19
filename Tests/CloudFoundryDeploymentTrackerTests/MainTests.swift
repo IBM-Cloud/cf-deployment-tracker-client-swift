@@ -77,8 +77,14 @@ class MainTests: XCTestCase {
       XCTAssertEqual(jsonResult["runtime"].stringValue, "swift")
       XCTAssertEqual(jsonResult["space_id"].stringValue, "b15eb0bb-cbf3-43b6-bfbc-f76d495981e5")
       XCTAssertNil(jsonResult["code_version"].string)
-      XCTAssertNotEqual(jsonResult["date_sent"].stringValue, "")
       XCTAssertEqual(jsonResult["repository_url"].stringValue, testRepoURL)
+
+      // Validate date_sent
+      XCTAssertNotNil(jsonResult["date_sent"].string)
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
+      let currentDate = dateFormatter.date(from: jsonResult["date_sent"].stringValue)
+      XCTAssertNotNil(currentDate)
 
       let cloudantStats = jsonResult["bound_vcap_services"]["cloudantNoSQLDB"]
       XCTAssertEqual(cloudantStats["count"].intValue, 1)
