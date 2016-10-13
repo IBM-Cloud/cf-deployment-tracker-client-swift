@@ -34,7 +34,7 @@ public struct CloudFoundryDeploymentTracker {
     do {
       appEnv = try CloudFoundryEnv.getAppEnv()
     } catch {
-      Log.warning("Couldn't get Cloud Foundry App environment instance.")
+      Log.verbose("Couldn't get Cloud Foundry App environment instance...")
     }
   }
 
@@ -54,9 +54,7 @@ public struct CloudFoundryDeploymentTracker {
 
   /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
-
     if let appEnv = appEnv, let trackerJson = buildTrackerJson(appEnv: appEnv), let jsonString = trackerJson.rawString() {
-
       var requestOptions: [ClientRequest.Options] = []
       requestOptions.append(.method("POST"))
       requestOptions.append(.schema("https://"))
@@ -77,18 +75,15 @@ public struct CloudFoundryDeploymentTracker {
           } catch {
             Log.error("Bad JSON doc received from deployment tracker.")
           }
-
         } else {
           Log.error("Failed to send tracking data with status code: \(response?.status)")
         }
       }
       req.end(jsonString)
-
     } else {
-      Log.warning("Failed to build valid JSON for deployment tracker.")
+      Log.verbose("Failed to build valid JSON payload for deployment tracker... maybe running locally and not on the cloud?")
       return
     }
-
   }
 
   /// Helper method to build Json in a valid format for tracking service
@@ -97,10 +92,9 @@ public struct CloudFoundryDeploymentTracker {
   ///
   /// - returns: JSON, assuming we have access to application info
   public func buildTrackerJson(appEnv: AppEnv) -> JSON? {
-
       var jsonEvent = JSON([:])
       guard let vcapApplication = appEnv.getApp() else {
-        Log.warning("Couldn't get Cloud Foundry App instance.")
+        Log.verbose("Couldn't get Cloud Foundry App instance... maybe running locally and not on the cloud?")
         return nil
       }
 
@@ -121,7 +115,6 @@ public struct CloudFoundryDeploymentTracker {
         jsonEvent["code_version"].stringValue = codeVersion
       }
       jsonEvent["repository_url"].stringValue = repositoryURL
-
       jsonEvent["runtime"].stringValue = "swift"
       jsonEvent["application_name"].stringValue = vcapApplication.name
       jsonEvent["space_id"].stringValue = vcapApplication.spaceId
@@ -134,20 +127,16 @@ public struct CloudFoundryDeploymentTracker {
       if services.count > 0 {
         var serviceDictionary = [String : JSON]()
         for (_, service) in services {
-
           if var serviceStats = serviceDictionary[service.label] {
-
             serviceStats["count"].intValue = serviceStats["count"].intValue + 1
             var plans = serviceStats["plans"].arrayValue.map { $0.stringValue }
             plans.append(service.plan)
             serviceStats["plans"] = JSON(Array(Set(plans)))
             serviceDictionary[service.label] = serviceStats
           } else {
-
             let newService = JSON(["count" : 1, "plans" : [service.plan]])
             serviceDictionary[service.label] = newService
           }
-
         }
         jsonEvent["bound_vcap_services"] = JSON(serviceDictionary)
       }
