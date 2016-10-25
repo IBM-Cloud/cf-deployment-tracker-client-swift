@@ -65,7 +65,7 @@ public struct CloudFoundryDeploymentTracker {
       requestOptions.append(.headers(headers))
 
       let req = HTTP.request(requestOptions) { response in
-        if let response = response , response.statusCode == HTTPStatusCode.OK || response.statusCode == HTTPStatusCode.created {
+        if let response = response, response.statusCode == HTTPStatusCode.OK || response.statusCode == HTTPStatusCode.created {
           Log.info("Uploaded stats \(response.status)")
           do {
             var body = Data()
