@@ -8,8 +8,9 @@ The cf deployment tracker for Swift is a package used to track number of deploym
 ![Deployment badge example](badge.png "Deployment Badge")
 
 ## Swift version
-- The 0.1.x releases were tested on OS X and Linux using the Swift `DEVELOPMENT-SNAPSHOT-2016-07-25-a` binaries.
-- The 0.3.x releases were tested on OS X and Linux using the Swift `3.0` binaries.
+- The 0.1.x releases were tested on macOS and Linux using the Swift `DEVELOPMENT-SNAPSHOT-2016-07-25-a` binaries.
+- The 0.3.x and 0.4.x releases were tested on macOS and Linux using the Swift `3.0` binaries.
+- The 0.5.x releases were tested on macOS and Linux using the Swift `3.0.1` binaries.
 
 You can download different versions of the Swift binaries by following this [link](https://swift.org/download/).
 
@@ -25,7 +26,7 @@ You can download different versions of the Swift binaries by following this [lin
 	     ...
 
 	     dependencies: [
-	         .Package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", majorVersion: 0, minor: 4),
+	         .Package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", majorVersion: 0, minor: 5),
 
 	         ...
 
