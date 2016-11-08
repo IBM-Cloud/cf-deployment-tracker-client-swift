@@ -39,7 +39,7 @@ You can download different versions of the Swift binaries by following this [lin
 
 	...
 
-	CloudFoundryDeploymentTracker(repositoryURL: "https://github.com/IBM-Swift/Kitura-Starter-Bluemix.git", codeVersion: nil).track()
+	CloudFoundryDeploymentTracker(repositoryURL: "https://github.com/IBM-Bluemix/Kitura-Starter.git", codeVersion: nil).track()
 
 	```
 The above code should be used within the main entry point of your Swift application, generally before you start your server.
@@ -47,7 +47,7 @@ The above code should be used within the main entry point of your Swift applicat
 3. Lastly, you should add a copy of the [Privacy Notice](#privacy-notice) to the README of your project. All applications that use the deployment tracker must have a Privacy Notice.
 
 ## Example App
-To see how to include this package into your app, please visit [Kitura-Starter-Bluemix](https://github.com/IBM-Swift/Kitura-Starter-Bluemix/tree/develop). View the [Package.swift](https://github.com/IBM-Swift/Kitura-Starter-Bluemix/blob/develop/Package.swift#L31) and [main.swift](https://github.com/IBM-Swift/Kitura-Starter-Bluemix/blob/develop/Sources/main.swift#L62) as a reference.
+To see how to include this package into your app, please visit [Kitura-Starter](https://github.com/IBM-Bluemix/Kitura-Starter). View the [Package.swift](https://github.com/IBM-Bluemix/Kitura-Starter/blob/master/Package.swift#L29) and [main.swift](https://github.com/IBM-Bluemix/Kitura-Starter/blob/master/Sources/Kitura-Starter/main.swift#L30) as a reference.
 
 ## Privacy Notice
 ```
@@ -66,7 +66,7 @@ This Swift application includes code to track deployments to [IBM Bluemix](https
 This data is collected from the parameters of the `CloudFoundryDeploymentTracker`, the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Bluemix and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
 
 ### Disabling Deployment Tracking
-Please see the README for the sample application (i.e. [Kitura-Starter-Bluemix](https://github.com/IBM-Swift/Kitura-Starter-Bluemix/tree/develop)) that includes this package for instructions on disabling deployment tracking, as the instructions may vary based on the sample application in which this package is included.
+Please see the README for the sample application (i.e. [Kitura-Starter](https://github.com/IBM-Bluemix/Kitura-Starter)) that includes this package for instructions on disabling deployment tracking, as the instructions may vary based on the sample application in which this package is included.
 ```
 
 ## License
