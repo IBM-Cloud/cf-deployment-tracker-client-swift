@@ -47,7 +47,7 @@ The above code should be used within the main entry point of your Swift applicat
 3. Lastly, you should add a copy of the [Privacy Notice](#privacy-notice) to the README of your project. All applications that use the deployment tracker must have a Privacy Notice.
 
 ## Example App
-To see how to include this package into your app, please visit [Kitura-Starter](https://github.com/IBM-Bluemix/Kitura-Starter). View the [Package.swift](https://github.com/IBM-Bluemix/Kitura-Starter/blob/master/Package.swift#L29) and [main.swift](https://github.com/IBM-Bluemix/Kitura-Starter/blob/master/Sources/main.swift#L30) as a reference.
+To see how to include this package into your app, please visit [Kitura-Starter](https://github.com/IBM-Bluemix/Kitura-Starter). View the [Package.swift](https://github.com/IBM-Bluemix/Kitura-Starter/blob/master/Package.swift#L29) and [main.swift](https://github.com/IBM-Bluemix/Kitura-Starter/blob/master/Sources/Kitura-Starter/main.swift#L30) as a reference.
 
 ## Privacy Notice
 ```
