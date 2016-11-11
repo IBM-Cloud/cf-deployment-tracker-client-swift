@@ -39,10 +39,10 @@ You can download different versions of the Swift binaries by following this [lin
 
 	...
 
-	CloudFoundryDeploymentTracker(repositoryURL: "https://github.com/IBM-Bluemix/Kitura-Starter.git", codeVersion: nil).track()
+	CloudFoundryDeploymentTracker(repositoryURL: "https://github.com/IBM-Bluemix/Kitura-Starter.git").track()
 
 	```
-The above code should be used within the main entry point of your Swift application, generally before you start your server.
+The above code should be used within the main entry point of your Swift application, generally before you start your server. Note, `CloudFoundryDeploymentTracker` has an optional parameter called `codeVersion` you can use on initialization for more specific tracking.
 
 3. Lastly, you should add a copy of the [Privacy Notice](#privacy-notice) to the README of your project. All applications that use the deployment tracker must have a Privacy Notice.
 
