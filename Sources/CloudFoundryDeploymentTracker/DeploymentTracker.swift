@@ -27,7 +27,7 @@ public struct CloudFoundryDeploymentTracker {
   var repositoryURL: String
   var codeVersion: String?
 
-  public init(repositoryURL: String, codeVersion: String?) {
+  public init(repositoryURL: String, codeVersion: String? = nil) {
     self.repositoryURL = repositoryURL
     self.codeVersion = codeVersion
     initLogger()
@@ -38,7 +38,7 @@ public struct CloudFoundryDeploymentTracker {
     }
   }
 
-  public init(appEnv: AppEnv, repositoryURL: String, codeVersion: String?) {
+  public init(appEnv: AppEnv, repositoryURL: String, codeVersion: String? = nil) {
     self.repositoryURL = repositoryURL
     self.codeVersion = codeVersion
     initLogger()

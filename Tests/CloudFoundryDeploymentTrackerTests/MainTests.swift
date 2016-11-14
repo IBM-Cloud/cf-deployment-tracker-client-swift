@@ -63,7 +63,7 @@ class MainTests: XCTestCase {
     loadJsonOptions(options: options)
     do {
       let appEnv = try CloudFoundryEnv.getAppEnv(options: jsonOptions)
-      let tracker = CloudFoundryDeploymentTracker(appEnv: appEnv, repositoryURL: testRepoURL, codeVersion: nil)
+      let tracker = CloudFoundryDeploymentTracker(appEnv: appEnv, repositoryURL: testRepoURL)
       guard let jsonResult = tracker.buildTrackerJson(appEnv: appEnv) else {
         XCTFail("Failed to receive json from build tracker method.")
         return

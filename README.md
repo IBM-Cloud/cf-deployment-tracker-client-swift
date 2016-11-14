@@ -39,7 +39,7 @@ You can download different versions of the Swift binaries by following this [lin
 
 	...
 
-	CloudFoundryDeploymentTracker(repositoryURL: "https://github.com/IBM-Bluemix/Kitura-Starter.git", codeVersion: nil).track()
+	CloudFoundryDeploymentTracker(repositoryURL: "https://github.com/IBM-Bluemix/Kitura-Starter.git").track()
 
 	```
 The above code should be used within the main entry point of your Swift application, generally before you start your server.
