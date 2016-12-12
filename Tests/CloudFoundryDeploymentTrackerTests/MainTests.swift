@@ -69,18 +69,18 @@ class MainTests: XCTestCase {
         return
       }
 
-      XCTAssertEqual(jsonResult["application_name"].stringValue, "swift-test")
-      let uris = jsonResult["application_uris"].arrayValue
+      XCTAssertEqual(jsonResult["application_name"] as? String, "swift-test")
+      let uris = jsonResult["application_uris"] as? [String]
       XCTAssertEqual(uris.count, 1, "There should be only 1 uri in the uris array.")
       XCTAssertEqual(uris.first!.stringValue, "swift-test.mybluemix.net", "URI value should match.")
-      XCTAssertEqual(jsonResult["application_version"].stringValue, "e5e029d1-4a1a-4004-9f79-655d550183fb")
-      XCTAssertEqual(jsonResult["runtime"].stringValue, "swift")
-      XCTAssertEqual(jsonResult["space_id"].stringValue, "b15eb0bb-cbf3-43b6-bfbc-f76d495981e5")
-      XCTAssertNil(jsonResult["code_version"].string)
-      XCTAssertEqual(jsonResult["repository_url"].stringValue, testRepoURL)
+      XCTAssertEqual(jsonResult["application_version"] as? String, "e5e029d1-4a1a-4004-9f79-655d550183fb")
+      XCTAssertEqual(jsonResult["runtime"] as? String, "swift")
+      XCTAssertEqual(jsonResult["space_id"] as? String, "b15eb0bb-cbf3-43b6-bfbc-f76d495981e5")
+      XCTAssertNil(jsonResult["code_version"] as? String)
+      XCTAssertEqual(jsonResult["repository_url"] as? String, testRepoURL)
 
       // Validate date_sent
-      XCTAssertNotNil(jsonResult["date_sent"].string)
+      XCTAssertNotNil(jsonResult["date_sent"] as? String)
       let dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
       let currentDate = dateFormatter.date(from: jsonResult["date_sent"].stringValue)

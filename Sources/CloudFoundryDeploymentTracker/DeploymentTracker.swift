@@ -16,7 +16,6 @@
 
 import Foundation
 import CloudFoundryEnv
-import SwiftyJSON
 import HeliumLogger
 import LoggerAPI
 import KituraNet
@@ -54,7 +53,8 @@ public struct CloudFoundryDeploymentTracker {
 
   /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
-    if let appEnv = appEnv, let trackerJson = buildTrackerJson(appEnv: appEnv), let jsonString = trackerJson.rawString() {
+    if let appEnv = appEnv, let trackerJson = buildTrackerJson(appEnv: appEnv) {
+      let jsonString = trackerJson.description
       var requestOptions: [ClientRequest.Options] = []
       requestOptions.append(.method("POST"))
       requestOptions.append(.schema("https://"))
@@ -70,8 +70,8 @@ public struct CloudFoundryDeploymentTracker {
           do {
             var body = Data()
             try response.readAllData(into: &body)
-            let jsonResponse = JSON(data: body)
-            Log.info("Deployment Tracker response: \(jsonResponse.rawValue)")
+            let jsonResponse = try? JSONSerialization.jsonObject(with: body, options: [])
+            Log.info("Deployment Tracker response: \(jsonResponse)")
           } catch {
             Log.error("Bad JSON doc received from deployment tracker.")
           }
@@ -91,8 +91,8 @@ public struct CloudFoundryDeploymentTracker {
   /// - parameter appEnv: application environment to pull Bluemix app data from
   ///
   /// - returns: JSON, assuming we have access to application info
-  public func buildTrackerJson(appEnv: AppEnv) -> JSON? {
-      var jsonEvent = JSON([:])
+  public func buildTrackerJson(appEnv: AppEnv) -> [String: Any]? {
+      var jsonEvent: [String: Any] = [:]
       guard let vcapApplication = appEnv.getApp() else {
         Log.verbose("Couldn't get Cloud Foundry App instance... maybe running locally and not on the cloud?")
         return nil
@@ -109,27 +109,30 @@ public struct CloudFoundryDeploymentTracker {
         dateFormatter.timeZone = TimeZone(abbreviation: "GMT")
       #endif
       dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
-      jsonEvent["date_sent"].stringValue = dateFormatter.string(from: Date())
+      jsonEvent["date_sent"] = dateFormatter.string(from: Date())
 
       if let codeVersion = self.codeVersion {
-        jsonEvent["code_version"].stringValue = codeVersion
+        jsonEvent["code_version"] = codeVersion
       }
-      jsonEvent["repository_url"].stringValue = repositoryURL
-      jsonEvent["runtime"].stringValue = "swift"
-      jsonEvent["application_name"].stringValue = vcapApplication.name
-      jsonEvent["space_id"].stringValue = vcapApplication.spaceId
-      jsonEvent["application_id"].stringValue = vcapApplication.id
-      jsonEvent["application_version"].stringValue = vcapApplication.version
-      let urisJson = JSON(vcapApplication.uris)
-      jsonEvent["application_uris"] = urisJson
+      jsonEvent["repository_url"] = repositoryURL
+      jsonEvent["runtime"] = "swift"
+      jsonEvent["application_name"] = vcapApplication.name
+      jsonEvent["space_id"] = vcapApplication.spaceId
+      jsonEvent["application_id"] = vcapApplication.id
+      jsonEvent["application_version"] = vcapApplication.version
+      //let urisJson = JSON(vcapApplication.uris)
+      //jsonEvent["application_uris"] = urisJson
+      jsonEvent["application_uris"] = vcapApplication.uris
 
       let services = appEnv.getServices()
       if services.count > 0 {
-        var serviceDictionary = [String : JSON]()
+        var serviceDictionary = [String : [String: Any]]()
         for (_, service) in services {
           if var serviceStats = serviceDictionary[service.label] {
-            serviceStats["count"].intValue = serviceStats["count"].intValue + 1
-            var plans = serviceStats["plans"].arrayValue.map { $0.stringValue }
+            if let count = serviceStats["count"] as? Int {
+                serviceStats["count"] = count + 1
+            }
+            var plans = serviceStats["plans"].arrayValue.map { $0 }
             plans.append(service.plan)
             serviceStats["plans"] = JSON(Array(Set(plans)))
             serviceDictionary[service.label] = serviceStats
