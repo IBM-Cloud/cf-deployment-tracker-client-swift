@@ -43,7 +43,7 @@ class MainTests: XCTestCase {
   let testCodeVersion = "0.1"
   let testRepoURL = "https://github.com/IBM-Swift/Kitura-Starter-Bluemix.git"
 
-  var jsonOptions: JSON = [:]
+  var jsonOptions: [String: Any] = [:]
 
   override func setUp() {
       super.setUp()
@@ -71,8 +71,8 @@ class MainTests: XCTestCase {
 
       XCTAssertEqual(jsonResult["application_name"] as? String, "swift-test")
       let uris = jsonResult["application_uris"] as? [String]
-      XCTAssertEqual(uris.count, 1, "There should be only 1 uri in the uris array.")
-      XCTAssertEqual(uris.first!.stringValue, "swift-test.mybluemix.net", "URI value should match.")
+      XCTAssertEqual(uris!.count, 1, "There should be only 1 uri in the uris array.")
+      XCTAssertEqual(uris![0] as String, "swift-test.mybluemix.net", "URI value should match.")
       XCTAssertEqual(jsonResult["application_version"] as? String, "e5e029d1-4a1a-4004-9f79-655d550183fb")
       XCTAssertEqual(jsonResult["runtime"] as? String, "swift")
       XCTAssertEqual(jsonResult["space_id"] as? String, "b15eb0bb-cbf3-43b6-bfbc-f76d495981e5")
@@ -83,11 +83,11 @@ class MainTests: XCTestCase {
       XCTAssertNotNil(jsonResult["date_sent"] as? String)
       let dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
-      let currentDate = dateFormatter.date(from: jsonResult["date_sent"].stringValue)
+      let currentDate = dateFormatter.date(from: jsonResult["date_sent"] as! String)
       XCTAssertNotNil(currentDate)
 
       let cloudantStats = jsonResult["bound_vcap_services"]["cloudantNoSQLDB"]
-      XCTAssertEqual(cloudantStats["count"].intValue, 1)
+      XCTAssertEqual(cloudantStats["count"] as Int, 1)
       let plans = cloudantStats["plans"].arrayValue.map { $0.stringValue }
       XCTAssertEqual(plans.count, 1)
       XCTAssertEqual(plans.first!, "Shared")
@@ -109,21 +109,21 @@ class MainTests: XCTestCase {
         return
       }
 
-      XCTAssertEqual(jsonResult["application_name"].stringValue, "BluePic")
-      let uris = jsonResult["application_uris"].arrayValue
-      XCTAssertEqual(uris.count, 1, "There should be only 1 uri in the uris array.")
-      XCTAssertEqual(uris.first!.stringValue, "bluepic-unprofessorial-inexpressibility.mybluemix.net", "URI value should match.")
-      XCTAssertEqual(jsonResult["application_version"].stringValue, "e5e034d1-4a1a-5005-5f78-7655d550183d")
-      XCTAssertEqual(jsonResult["runtime"].stringValue, "swift")
-      XCTAssertEqual(jsonResult["space_id"].stringValue, "b15e5trt-cbf3-67d6-bafe-7b467f6d78b6")
-      XCTAssertEqual(jsonResult["code_version"].stringValue, testCodeVersion)
-      XCTAssertEqual(jsonResult["repository_url"].stringValue, testRepoURL)
+      XCTAssertEqual(jsonResult["application_name"] as? String, "BluePic")
+      let uris = jsonResult["application_uris"] as? [String]
+      XCTAssertEqual(uris!.count, 1, "There should be only 1 uri in the uris array.")
+      XCTAssertEqual(uris![0] as String, "bluepic-unprofessorial-inexpressibility.mybluemix.net", "URI value should match.")
+      XCTAssertEqual(jsonResult["application_version"] as? String, "e5e034d1-4a1a-5005-5f78-7655d550183d")
+      XCTAssertEqual(jsonResult["runtime"] as? String, "swift")
+      XCTAssertEqual(jsonResult["space_id"] as? String, "b15e5trt-cbf3-67d6-bafe-7b467f6d78b6")
+      XCTAssertEqual(jsonResult["code_version"] as? String, testCodeVersion)
+      XCTAssertEqual(jsonResult["repository_url"] as? String, testRepoURL)
 
-      let services = jsonResult["bound_vcap_services"]
+      let services = jsonResult["bound_vcap_services"] as? [String: Any]
 
       // basic test
-      let objStorageStats = services["Object-Storage"]
-      XCTAssertEqual(objStorageStats["count"].intValue, 1)
+      let objStorageStats = services["Object-Storage"] as [String: Any]
+      XCTAssertEqual(objStorageStats["count"] as Int, 1)
       var plans = objStorageStats["plans"].arrayValue.map { $0.stringValue }
       XCTAssertEqual(plans.count, 1)
       XCTAssertEqual(plans.first!, "N/A")
