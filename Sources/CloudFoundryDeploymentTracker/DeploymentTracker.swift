@@ -90,8 +90,8 @@ public struct CloudFoundryDeploymentTracker {
   /// - parameter appEnv: application environment to pull Bluemix app data from
   ///
   /// - returns: JSON, assuming we have access to application info
-  public func buildTrackerJson(appEnv: AppEnv) -> [String: Any]? {
-      var jsonEvent: [String: Any] = [:]
+  public func buildTrackerJson(appEnv: AppEnv) -> [String:Any]? {
+      var jsonEvent: [String:Any] = [:]
       guard let vcapApplication = appEnv.getApp() else {
         Log.verbose("Couldn't get Cloud Foundry App instance... maybe running locally and not on the cloud?")
         return nil
