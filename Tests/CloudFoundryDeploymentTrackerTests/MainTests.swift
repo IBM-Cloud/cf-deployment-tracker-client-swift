@@ -68,9 +68,9 @@ class MainTests: XCTestCase {
       }
 
       XCTAssertEqual(jsonResult["application_name"] as? String, "swift-test")
-      let uris = jsonResult["application_uris"] as? [String]
-      XCTAssertEqual(uris!.count, 1, "There should be only 1 uri in the uris array.")
-      XCTAssertEqual(uris![0] as String, "swift-test.mybluemix.net", "URI value should match.")
+      let uris = jsonResult["application_uris"] as! [String]
+      XCTAssertEqual(uris.count, 1, "There should be only 1 uri in the uris array.")
+      XCTAssertEqual(uris[0] as String, "swift-test.mybluemix.net", "URI value should match.")
       XCTAssertEqual(jsonResult["application_version"] as? String, "e5e029d1-4a1a-4004-9f79-655d550183fb")
       XCTAssertEqual(jsonResult["runtime"] as? String, "swift")
       XCTAssertEqual(jsonResult["space_id"] as? String, "b15eb0bb-cbf3-43b6-bfbc-f76d495981e5")
@@ -135,7 +135,7 @@ class MainTests: XCTestCase {
       XCTAssertEqual(plans[0], "Basic")
 
       // multi-version and plan of same service
-      let cloudantStats = (services["cloudantNoSQLDB"])! as! [String:Any]
+      let cloudantStats = services["cloudantNoSQLDB"] as! [String:Any]
       XCTAssertEqual(cloudantStats["Count"] as? Int, 2)
       plans = cloudantStats["plans"] as! [String]
       XCTAssertEqual(plans.count, 2)
