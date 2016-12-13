@@ -126,7 +126,7 @@ public struct CloudFoundryDeploymentTracker {
 
       let services = appEnv.getServices()
       if services.count > 0 {
-        var serviceDictionary = [String : [String: Any]]()
+        var serviceDictionary = [String:[String:Any]]()
         for (_, service) in services {
           if var serviceStats = serviceDictionary[service.label] {
             if let count = serviceStats["count"] as? Int {
