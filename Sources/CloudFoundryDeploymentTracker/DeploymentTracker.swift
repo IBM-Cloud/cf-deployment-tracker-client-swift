@@ -119,8 +119,6 @@ public struct CloudFoundryDeploymentTracker {
       jsonEvent["space_id"] = vcapApplication.spaceId
       jsonEvent["application_id"] = vcapApplication.id
       jsonEvent["application_version"] = vcapApplication.version
-      //let urisJson = JSON(vcapApplication.uris)
-      //jsonEvent["application_uris"] = urisJson
       jsonEvent["application_uris"] = vcapApplication.uris
 
       let services = appEnv.getServices()
