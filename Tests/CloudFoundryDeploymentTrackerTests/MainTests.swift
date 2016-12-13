@@ -22,7 +22,6 @@
 
 import XCTest
 import Foundation
-import SwiftyJSON
 import CloudFoundryEnv
 
 @testable import CloudFoundryDeploymentTracker
@@ -55,8 +54,7 @@ class MainTests: XCTestCase {
   }
 
   func loadJsonOptions(options: String) {
-    let data = options.data(using: String.Encoding.utf8)
-    jsonOptions = JSON(data: data!) // should never fail using hard coded Json
+    jsonOptions = JSONUtils.convertStringToJSON(text: options)!
   }
 
   func testTrackerJsonBuilding() {
@@ -86,11 +84,12 @@ class MainTests: XCTestCase {
       let currentDate = dateFormatter.date(from: jsonResult["date_sent"] as! String)
       XCTAssertNotNil(currentDate)
 
-      let cloudantStats = jsonResult["bound_vcap_services"]["cloudantNoSQLDB"]
-      XCTAssertEqual(cloudantStats["count"] as Int, 1)
-      let plans = cloudantStats["plans"].arrayValue.map { $0.stringValue }
-      XCTAssertEqual(plans.count, 1)
-      XCTAssertEqual(plans.first!, "Shared")
+      let cloudantJSON = jsonResult["bound_vcap_services"] as? [String: Any]
+      let cloudantStats = cloudantJSON?["cloudantNoSQLDB"] as? [String: Any]
+      XCTAssertEqual(cloudantStats?["count"] as! Int, 1)
+      let plans = cloudantStats?["plans"] as? [String]
+      XCTAssertEqual(plans?.count, 1)
+      XCTAssertEqual(plans?[0], "Shared")
 
     } catch let error as NSError {
       print("Error domain: \(error.domain)")
@@ -119,26 +118,26 @@ class MainTests: XCTestCase {
       XCTAssertEqual(jsonResult["code_version"] as? String, testCodeVersion)
       XCTAssertEqual(jsonResult["repository_url"] as? String, testRepoURL)
 
-      let services = jsonResult["bound_vcap_services"] as? [String: Any]
+      let services = jsonResult["bound_vcap_services"] as? [String: [String: Any]]
 
       // basic test
-      let objStorageStats = services["Object-Storage"] as [String: Any]
-      XCTAssertEqual(objStorageStats["count"] as Int, 1)
-      var plans = objStorageStats["plans"].arrayValue.map { $0.stringValue }
+      let objStorageStats = (services?["Object-Storage"])! as [String: Any]
+      XCTAssertEqual(objStorageStats["count"] as! Int, 1)
+      var plans = objStorageStats["plans"] as! String
       XCTAssertEqual(plans.count, 1)
-      XCTAssertEqual(plans.first!, "N/A")
+      XCTAssertEqual(plans, "N/A")
 
       // mult-version of same service
-      let pushStats = services["imfpush"]
-      XCTAssertEqual(pushStats["count"].intValue, 2)
-      plans = pushStats["plans"].arrayValue.map { $0.stringValue }
+      let pushStats = (services?["imfpush"])! as [String: Any]
+      XCTAssertEqual(pushStats["count"] as? Int, 2)
+      plans = pushStats["plans"] as! String
       XCTAssertEqual(plans.count, 1)
-      XCTAssertEqual(plans.first!, "Basic")
+      XCTAssertEqual(plans, "Basic")
 
       // multi-version and plan of same service
-      let cloudantStats = services["cloudantNoSQLDB"]
-      XCTAssertEqual(cloudantStats["count"].intValue, 2)
-      plans = cloudantStats["plans"].arrayValue.map { $0.stringValue }
+      let cloudantStats = (services?["cloudantNoSQLDB"])! as [String: Any]
+      XCTAssertEqual(cloudantStats["count"] as! Int, 2)
+      plans = cloudantStats["plans"] as! String
       XCTAssertEqual(plans.count, 2)
       let expectedPlans = ["Free", "Shared"]
       for (index, value) in plans.enumerated() {

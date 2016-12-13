@@ -132,14 +132,12 @@ public struct CloudFoundryDeploymentTracker {
             if let count = serviceStats["count"] as? Int {
                 serviceStats["count"] = count + 1
             }
-            var plans = serviceStats["plans"] as! [String]
+            var plans = serviceStats["plans"].arrayValue.map { $0.stringValue }
             plans.append(service.plan)
             serviceStats["plans"] = plans
             serviceDictionary[service.label] = serviceStats
           } else {
-            var newService = [String: Any]()
-            newService["count"] = 1
-            newService["plans"] = service.plan
+            let newService = JSON(["count" : 1, "plans" : [service.plan]])
             serviceDictionary[service.label] = newService
           }
         }
