@@ -49,7 +49,7 @@ public struct CloudFoundryDeploymentTracker {
       Log.logger = HeliumLogger()
     }
   }
-    
+
   /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
     if let appEnv = appEnv, let trackerJson = buildTrackerJson(appEnv: appEnv) {
@@ -69,7 +69,7 @@ public struct CloudFoundryDeploymentTracker {
           do {
             var body = Data()
             try response.readAllData(into: &body)
-            let jsonResponse = try? JSONSerialization.jsonObject(with: body, options: [])
+            let jsonResponse = try JSONSerialization.jsonObject(with: body, options: [])
             Log.info("Deployment Tracker response: \(jsonResponse)")
           } catch {
             Log.error("Bad JSON doc received from deployment tracker.")
