@@ -126,8 +126,8 @@ public struct CloudFoundryDeploymentTracker {
         var serviceDictionary = [String:Any]()
         for (_, service) in services {
             if var serviceStats = serviceDictionary[service.label] as? [String:Any] {
-            if let count = serviceStats["Count"] as? Int {
-                serviceStats["Count"] = count + 1
+            if let count = serviceStats["count"] as? Int {
+                serviceStats["count"] = count + 1
             }
             var plans: [String] = serviceStats["plans"] as! [String]
             if !plans.contains(service.plan) { plans.append(service.plan) }
@@ -135,7 +135,7 @@ public struct CloudFoundryDeploymentTracker {
             serviceDictionary[service.label] = serviceStats
           } else {
             var newService = [String:Any]()
-            newService["Count"] = 1
+            newService["count"] = 1
             newService["plans"] = service.plan.components(separatedBy: ", ")
             serviceDictionary[service.label] = newService
           }

@@ -86,7 +86,7 @@ class MainTests: XCTestCase {
 
       let cloudantJSON = jsonResult["bound_vcap_services"] as! [String:Any]
       let cloudantStats = cloudantJSON["cloudantNoSQLDB"] as! [String:Any]
-      XCTAssertEqual(cloudantStats["Count"] as? Int, 1)
+      XCTAssertEqual(cloudantStats["count"] as? Int, 1)
       let plans = cloudantStats["plans"] as! [String]
       XCTAssertEqual(plans.count, 1)
       XCTAssertEqual(plans[0], "Shared")
@@ -122,21 +122,21 @@ class MainTests: XCTestCase {
 
       // basic test
       let objStorageStats = services["Object-Storage"] as! [String:Any]
-      XCTAssertEqual(objStorageStats["Count"] as? Int, 1)
+      XCTAssertEqual(objStorageStats["count"] as? Int, 1)
       var plans = objStorageStats["plans"] as! [String]
       XCTAssertEqual(plans.count, 1)
       XCTAssertEqual(plans[0], "N/A")
 
       // mult-version of same service
       let pushStats = services["imfpush"] as! [String:Any]
-      XCTAssertEqual(pushStats["Count"] as? Int, 2)
+      XCTAssertEqual(pushStats["count"] as? Int, 2)
       plans = pushStats["plans"] as! [String]
       XCTAssertEqual(plans.count, 1)
       XCTAssertEqual(plans[0], "Basic")
 
       // multi-version and plan of same service
       let cloudantStats = services["cloudantNoSQLDB"] as! [String:Any]
-      XCTAssertEqual(cloudantStats["Count"] as? Int, 2)
+      XCTAssertEqual(cloudantStats["count"] as? Int, 2)
       plans = cloudantStats["plans"] as! [String]
       XCTAssertEqual(plans.count, 2)
       let expectedPlans = ["Free", "Shared"]
