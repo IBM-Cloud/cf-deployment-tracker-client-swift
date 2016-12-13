@@ -42,7 +42,7 @@ class MainTests: XCTestCase {
   let testCodeVersion = "0.1"
   let testRepoURL = "https://github.com/IBM-Swift/Kitura-Starter-Bluemix.git"
 
-  var jsonOptions: [String: Any] = [:]
+  var jsonOptions: [String:Any] = [:]
 
   override func setUp() {
       super.setUp()
