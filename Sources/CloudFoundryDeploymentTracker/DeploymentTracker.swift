@@ -49,8 +49,7 @@ public struct CloudFoundryDeploymentTracker {
       Log.logger = HeliumLogger()
     }
   }
-
-
+    
   /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
     if let appEnv = appEnv, let trackerJson = buildTrackerJson(appEnv: appEnv) {
@@ -126,18 +125,20 @@ public struct CloudFoundryDeploymentTracker {
 
       let services = appEnv.getServices()
       if services.count > 0 {
-        var serviceDictionary = [String : [String: Any]]()
+        var serviceDictionary = [String:Any]()
         for (_, service) in services {
-          if var serviceStats = serviceDictionary[service.label] {
-            if let count = serviceStats["count"] as? Int {
-                serviceStats["count"] = count + 1
+            if var serviceStats = serviceDictionary[service.label] as? [String:Any] {
+            if let count = serviceStats["Count"] as? Int {
+                serviceStats["Count"] = count + 1
             }
-            var plans = serviceStats["plans"].arrayValue.map { $0.stringValue }
-            plans.append(service.plan)
+            var plans: [String] = serviceStats["plans"] as! [String]
+            if !plans.contains(service.plan) { plans.append(service.plan) }
             serviceStats["plans"] = plans
             serviceDictionary[service.label] = serviceStats
           } else {
-            let newService = JSON(["count" : 1, "plans" : [service.plan]])
+            var newService = [String:Any]()
+            newService["Count"] = 1
+            newService["plans"] = service.plan.components(separatedBy: ", ")
             serviceDictionary[service.label] = newService
           }
         }
