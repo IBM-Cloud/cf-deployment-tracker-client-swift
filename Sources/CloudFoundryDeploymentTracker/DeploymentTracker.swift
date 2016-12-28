@@ -52,8 +52,9 @@ public struct CloudFoundryDeploymentTracker {
 
   /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
-    if let appEnv = appEnv, let trackerJson = buildTrackerJson(appEnv: appEnv) {
-      let jsonString = trackerJson.description
+    if let appEnv = appEnv, let trackerJson = buildTrackerJson(appEnv: appEnv),
+       let jsonData = try? JSONSerialization.data(withJSONObject: trackerJson) {
+
       var requestOptions: [ClientRequest.Options] = []
       requestOptions.append(.method("POST"))
       requestOptions.append(.schema("https://"))
@@ -78,7 +79,7 @@ public struct CloudFoundryDeploymentTracker {
           Log.error("Failed to send tracking data with status code: \(response?.status)")
         }
       }
-      req.end(jsonString)
+      req.end(jsonData)
     } else {
       Log.verbose("Failed to build valid JSON payload for deployment tracker... maybe running locally and not on the cloud?")
       return
