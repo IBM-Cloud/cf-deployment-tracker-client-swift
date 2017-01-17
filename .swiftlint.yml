@@ -12,3 +12,4 @@ type_name:
 
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Packages
+  - Tests
