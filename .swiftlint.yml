@@ -1,15 +1,15 @@
-disabled_rules: # rule identifiers to exclude from running
-  - line_length
-  - file_length
-  - variable_name
-  - type_name
-  - cyclomatic_complexity
+included:
+    - Sources
 
-type_name:
-  max_length: # warning and error
-    warning: 60
-    error: 80
+custom_rules:
+  double_space:
+    include: "*.swift"
+    name: "Double space" 
+    regex: "([a-z,A-Z] \s+)" 
+    message: "Double space between keywords" 
+    match_kinds: keyword 
+    severity: warning 
 
-excluded: # paths to ignore during linting. Takes precedence over `included`.
-  - Packages
-  - Tests
+line_length: 
+  warning: 250 
+  error: 500 
