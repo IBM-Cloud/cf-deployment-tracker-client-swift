@@ -117,11 +117,11 @@ public struct CloudFoundryDeploymentTracker {
       jsonEvent["repository_url"] = repositoryURL
       jsonEvent["runtime"] = "swift"
       jsonEvent["application_name"] = vcapApplication.name
-      jsonEvent["space_id"] = vcapApplication.space_id
-      jsonEvent["application_id"] = vcapApplication.application_id
+      jsonEvent["space_id"] = vcapApplication.spaceId
+      jsonEvent["application_id"] = vcapApplication.id
       jsonEvent["application_version"] = vcapApplication.version
       jsonEvent["application_uris"] = vcapApplication.uris
-      jsonEvent["instance_index"] = vcapApplication.instance_index
+      jsonEvent["instance_index"] = vcapApplication.instanceIndex
 
       let services = appEnv.getServices()
       if services.count > 0 {
