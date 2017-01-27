@@ -76,6 +76,8 @@ class MainTests: XCTestCase {
       XCTAssertEqual(jsonResult["space_id"] as? String, "b15eb0bb-cbf3-43b6-bfbc-f76d495981e5")
       XCTAssertNil(jsonResult["code_version"] as? String)
       XCTAssertEqual(jsonResult["repository_url"] as? String, testRepoURL)
+      XCTAssertEqual(jsonResult["application_id"] as? String, "e582416a-9771-453f-8df1-7b467f6d78e4")
+      XCTAssertEqual(jsonResult["instance_index"] as? Int, 0)
 
       // Validate date_sent
       XCTAssertNotNil(jsonResult["date_sent"] as? String)
@@ -117,6 +119,8 @@ class MainTests: XCTestCase {
       XCTAssertEqual(jsonResult["space_id"] as? String, "b15e5trt-cbf3-67d6-bafe-7b467f6d78b6")
       XCTAssertEqual(jsonResult["code_version"] as? String, testCodeVersion)
       XCTAssertEqual(jsonResult["repository_url"] as? String, testRepoURL)
+      XCTAssertEqual(jsonResult["application_id"] as? String, "e58223416a-9731-443f-8df1-7br2r23r8e")
+      XCTAssertEqual(jsonResult["instance_index"] as? Int, 0)
 
       let services = jsonResult["bound_vcap_services"] as! [String:Any]
 
