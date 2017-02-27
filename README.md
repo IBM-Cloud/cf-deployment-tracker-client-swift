@@ -1,4 +1,4 @@
-[![Build Status - Develop](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-client-swift.svg?branch=master)](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-client-swift)
+[![Build Status - Develop](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-client-swift.svg?branch=develop)](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-client-swift)
 [![Swift][swift-badge]][swift-url]
 [![Platform][platform-badge]][platform-url]
 

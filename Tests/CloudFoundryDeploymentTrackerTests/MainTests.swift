@@ -1,5 +1,5 @@
 /**
-* Copyright IBM Corporation 2016
+* Copyright IBM Corporation 2016, 2017
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@
 import XCTest
 import Foundation
 import CloudFoundryEnv
+import Configuration
+import CloudFoundryConfig
 
 @testable import CloudFoundryDeploymentTracker
 
@@ -59,100 +61,87 @@ class MainTests: XCTestCase {
 
   func testTrackerJsonBuilding() {
     loadJsonOptions(options: options)
-    do {
-      let appEnv = try CloudFoundryEnv.getAppEnv(options: jsonOptions)
-      let tracker = CloudFoundryDeploymentTracker(appEnv: appEnv, repositoryURL: testRepoURL)
-      guard let jsonResult = tracker.buildTrackerJson(appEnv: appEnv) else {
-        XCTFail("Failed to receive json from build tracker method.")
-        return
-      }
-
-      XCTAssertEqual(jsonResult["application_name"] as? String, "swift-test")
-      let uris = jsonResult["application_uris"] as! [String]
-      XCTAssertEqual(uris.count, 1, "There should be only 1 uri in the uris array.")
-      XCTAssertEqual(uris[0] as String, "swift-test.mybluemix.net", "URI value should match.")
-      XCTAssertEqual(jsonResult["application_version"] as? String, "e5e029d1-4a1a-4004-9f79-655d550183fb")
-      XCTAssertEqual(jsonResult["runtime"] as? String, "swift")
-      XCTAssertEqual(jsonResult["space_id"] as? String, "b15eb0bb-cbf3-43b6-bfbc-f76d495981e5")
-      XCTAssertNil(jsonResult["code_version"] as? String)
-      XCTAssertEqual(jsonResult["repository_url"] as? String, testRepoURL)
-      XCTAssertEqual(jsonResult["application_id"] as? String, "e582416a-9771-453f-8df1-7b467f6d78e4")
-      XCTAssertEqual(jsonResult["instance_index"] as? Int, 0)
-
-      // Validate date_sent
-      XCTAssertNotNil(jsonResult["date_sent"] as? String)
-      let dateFormatter = DateFormatter()
-      dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
-      let currentDate = dateFormatter.date(from: jsonResult["date_sent"] as! String)
-      XCTAssertNotNil(currentDate)
-
-      let cloudantJSON = jsonResult["bound_vcap_services"] as! [String:Any]
-      let cloudantStats = cloudantJSON["cloudantNoSQLDB"] as! [String:Any]
-      XCTAssertEqual(cloudantStats["count"] as? Int, 1)
-      let plans = cloudantStats["plans"] as! [String]
-      XCTAssertEqual(plans.count, 1)
-      XCTAssertEqual(plans[0], "Shared")
-
-    } catch let error as NSError {
-      print("Error domain: \(error.domain)")
-      print("Error code: \(error.code)")
-      XCTFail("Could not get AppEnv object!")
+    let configMgr = ConfigurationManager()
+    configMgr.load(jsonOptions)
+    let tracker = CloudFoundryDeploymentTracker(configMgr: configMgr, repositoryURL: testRepoURL)
+    guard let jsonResult = tracker.buildTrackerJson(configMgr: configMgr) else {
+      XCTFail("Failed to receive json from build tracker method.")
+      return
     }
+
+    XCTAssertEqual(jsonResult["application_name"] as? String, "swift-test")
+    let uris = jsonResult["application_uris"] as! [String]
+    XCTAssertEqual(uris.count, 1, "There should be only 1 uri in the uris array.")
+    XCTAssertEqual(uris[0] as String, "swift-test.mybluemix.net", "URI value should match.")
+    XCTAssertEqual(jsonResult["application_version"] as? String, "e5e029d1-4a1a-4004-9f79-655d550183fb")
+    XCTAssertEqual(jsonResult["runtime"] as? String, "swift")
+    XCTAssertEqual(jsonResult["space_id"] as? String, "b15eb0bb-cbf3-43b6-bfbc-f76d495981e5")
+    XCTAssertNil(jsonResult["code_version"] as? String)
+    XCTAssertEqual(jsonResult["repository_url"] as? String, testRepoURL)
+    XCTAssertEqual(jsonResult["application_id"] as? String, "e582416a-9771-453f-8df1-7b467f6d78e4")
+    XCTAssertEqual(jsonResult["instance_index"] as? Int, 0)
+
+    // Validate date_sent
+    XCTAssertNotNil(jsonResult["date_sent"] as? String)
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
+    let currentDate = dateFormatter.date(from: jsonResult["date_sent"] as! String)
+    XCTAssertNotNil(currentDate)
+
+    let cloudantJSON = jsonResult["bound_vcap_services"] as! [String:Any]
+    let cloudantStats = cloudantJSON["cloudantNoSQLDB"] as! [String:Any]
+    XCTAssertEqual(cloudantStats["count"] as? Int, 1)
+    let plans = cloudantStats["plans"] as! [String]
+    XCTAssertEqual(plans.count, 1)
+    XCTAssertEqual(plans[0], "Shared")
   }
 
   func testNumerousServiceJson() {
     loadJsonOptions(options: optionsTwo)
-    do {
-      let appEnv = try CloudFoundryEnv.getAppEnv(options: jsonOptions)
-      let tracker = CloudFoundryDeploymentTracker(appEnv: appEnv, repositoryURL: testRepoURL, codeVersion: testCodeVersion)
-      guard let jsonResult = tracker.buildTrackerJson(appEnv: appEnv) else {
-        XCTFail("Failed to receive json from build tracker method.")
-        return
-      }
+    let configMgr = ConfigurationManager()
+    configMgr.load(jsonOptions)
+    let tracker = CloudFoundryDeploymentTracker(configMgr: configMgr, repositoryURL: testRepoURL, codeVersion: testCodeVersion)
+    guard let jsonResult = tracker.buildTrackerJson(configMgr: configMgr) else {
+      XCTFail("Failed to receive json from build tracker method.")
+      return
+    }
 
-      XCTAssertEqual(jsonResult["application_name"] as? String, "BluePic")
-      let uris = jsonResult["application_uris"] as? [String]
-      XCTAssertEqual(uris!.count, 1, "There should be only 1 uri in the uris array.")
-      XCTAssertEqual(uris![0] as String, "bluepic-unprofessorial-inexpressibility.mybluemix.net", "URI value should match.")
-      XCTAssertEqual(jsonResult["application_version"] as? String, "e5e034d1-4a1a-5005-5f78-7655d550183d")
-      XCTAssertEqual(jsonResult["runtime"] as? String, "swift")
-      XCTAssertEqual(jsonResult["space_id"] as? String, "b15e5trt-cbf3-67d6-bafe-7b467f6d78b6")
-      XCTAssertEqual(jsonResult["code_version"] as? String, testCodeVersion)
-      XCTAssertEqual(jsonResult["repository_url"] as? String, testRepoURL)
-      XCTAssertEqual(jsonResult["application_id"] as? String, "e58223416a-9731-443f-8df1-7br2r23r8e")
-      XCTAssertEqual(jsonResult["instance_index"] as? Int, 0)
+    XCTAssertEqual(jsonResult["application_name"] as? String, "BluePic")
+    let uris = jsonResult["application_uris"] as? [String]
+    XCTAssertEqual(uris!.count, 1, "There should be only 1 uri in the uris array.")
+    XCTAssertEqual(uris![0] as String, "bluepic-unprofessorial-inexpressibility.mybluemix.net", "URI value should match.")
+    XCTAssertEqual(jsonResult["application_version"] as? String, "e5e034d1-4a1a-5005-5f78-7655d550183d")
+    XCTAssertEqual(jsonResult["runtime"] as? String, "swift")
+    XCTAssertEqual(jsonResult["space_id"] as? String, "b15e5trt-cbf3-67d6-bafe-7b467f6d78b6")
+    XCTAssertEqual(jsonResult["code_version"] as? String, testCodeVersion)
+    XCTAssertEqual(jsonResult["repository_url"] as? String, testRepoURL)
+    XCTAssertEqual(jsonResult["application_id"] as? String, "e58223416a-9731-443f-8df1-7br2r23r8e")
+    XCTAssertEqual(jsonResult["instance_index"] as? Int, 0)
 
-      let services = jsonResult["bound_vcap_services"] as! [String:Any]
+    let services = jsonResult["bound_vcap_services"] as! [String:Any]
 
-      // basic test
-      let objStorageStats = services["Object-Storage"] as! [String:Any]
-      XCTAssertEqual(objStorageStats["count"] as? Int, 1)
-      var plans = objStorageStats["plans"] as! [String]
-      XCTAssertEqual(plans.count, 1)
-      XCTAssertEqual(plans[0], "N/A")
+    // basic test
+    let objStorageStats = services["Object-Storage"] as! [String:Any]
+    XCTAssertEqual(objStorageStats["count"] as? Int, 1)
+    var plans = objStorageStats["plans"] as! [String]
+    XCTAssertEqual(plans.count, 1)
+    XCTAssertEqual(plans[0], "N/A")
 
-      // mult-version of same service
-      let pushStats = services["imfpush"] as! [String:Any]
-      XCTAssertEqual(pushStats["count"] as? Int, 2)
-      plans = pushStats["plans"] as! [String]
-      XCTAssertEqual(plans.count, 1)
-      XCTAssertEqual(plans[0], "Basic")
+    // mult-version of same service
+    let pushStats = services["imfpush"] as! [String:Any]
+    XCTAssertEqual(pushStats["count"] as? Int, 2)
+    plans = pushStats["plans"] as! [String]
+    XCTAssertEqual(plans.count, 1)
+    XCTAssertEqual(plans[0], "Basic")
 
-      // multi-version and plan of same service
-      let cloudantStats = services["cloudantNoSQLDB"] as! [String:Any]
-      XCTAssertEqual(cloudantStats["count"] as? Int, 2)
-      plans = cloudantStats["plans"] as! [String]
-      XCTAssertEqual(plans.count, 2)
-      let expectedPlans = ["Free", "Shared"]
-      for (index, value) in plans.enumerated() {
-        XCTAssertEqual(value, expectedPlans[index])
-      }
-
-    } catch let error as NSError {
-      print("Error domain: \(error.domain)")
-      print("Error code: \(error.code)")
-      XCTFail("Could not get AppEnv object!")
+    // multi-version and plan of same service
+    let cloudantStats = services["cloudantNoSQLDB"] as! [String:Any]
+    XCTAssertEqual(cloudantStats["count"] as? Int, 2)
+    plans = cloudantStats["plans"] as! [String]
+    XCTAssertEqual(plans.count, 2)
+    let expectedPlans = ["Free", "Shared"]
+    for (index, value) in plans.enumerated() {
+      XCTAssertEqual(value, expectedPlans[index])
     }
   }
-
 }

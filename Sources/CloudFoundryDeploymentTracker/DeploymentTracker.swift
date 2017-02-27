@@ -1,5 +1,5 @@
 /**
-* Copyright IBM Corporation 2016
+* Copyright IBM Corporation 2016, 2017
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,14 +15,16 @@
 **/
 
 import Foundation
+import Configuration
 import CloudFoundryEnv
+import CloudFoundryConfig
 import HeliumLogger
 import LoggerAPI
 import KituraNet
 
 public struct CloudFoundryDeploymentTracker {
 
-  var appEnv: AppEnv?
+  var configMgr: ConfigurationManager?
   var repositoryURL: String
   var codeVersion: String?
 
@@ -30,18 +32,15 @@ public struct CloudFoundryDeploymentTracker {
     self.repositoryURL = repositoryURL
     self.codeVersion = codeVersion
     initLogger()
-    do {
-      appEnv = try CloudFoundryEnv.getAppEnv()
-    } catch {
-      Log.verbose("Couldn't get Cloud Foundry App environment instance...")
-    }
+    let configMgr = ConfigurationManager()
+    configMgr.load(.environmentVariables)
   }
 
-  public init(appEnv: AppEnv, repositoryURL: String, codeVersion: String? = nil) {
+  public init(configMgr: ConfigurationManager, repositoryURL: String, codeVersion: String? = nil) {
     self.repositoryURL = repositoryURL
     self.codeVersion = codeVersion
     initLogger()
-    self.appEnv = appEnv
+    self.configMgr = configMgr
   }
 
   private func initLogger() {
@@ -52,7 +51,7 @@ public struct CloudFoundryDeploymentTracker {
 
   /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
-    if let appEnv = appEnv, let trackerJson = buildTrackerJson(appEnv: appEnv),
+    if let configMgr = configMgr, let trackerJson = buildTrackerJson(configMgr: configMgr),
        let jsonData = try? JSONSerialization.data(withJSONObject: trackerJson) {
 
       var requestOptions: [ClientRequest.Options] = []
@@ -88,12 +87,12 @@ public struct CloudFoundryDeploymentTracker {
 
   /// Helper method to build Json in a valid format for tracking service
   ///
-  /// - parameter appEnv: application environment to pull Bluemix app data from
+  /// - parameter configMgr: application environment to pull Bluemix app data from
   ///
   /// - returns: JSON, assuming we have access to application info
-  public func buildTrackerJson(appEnv: AppEnv) -> [String:Any]? {
+  public func buildTrackerJson(configMgr: ConfigurationManager) -> [String:Any]? {
       var jsonEvent: [String:Any] = [:]
-      guard let vcapApplication = appEnv.getApp() else {
+      guard let vcapApplication = configMgr.getApp() else {
         Log.verbose("Couldn't get Cloud Foundry App instance... maybe running locally and not on the cloud?")
         return nil
       }
@@ -123,7 +122,7 @@ public struct CloudFoundryDeploymentTracker {
       jsonEvent["application_uris"] = vcapApplication.uris
       jsonEvent["instance_index"] = vcapApplication.instanceIndex
 
-      let services = appEnv.getServices()
+      let services = configMgr.getServices()
       if services.count > 0 {
         var serviceDictionary = [String: Any]()
         for (_, service) in services {
