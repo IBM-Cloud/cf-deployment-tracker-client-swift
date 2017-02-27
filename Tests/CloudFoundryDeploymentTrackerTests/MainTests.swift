@@ -62,9 +62,9 @@ class MainTests: XCTestCase {
   func testTrackerJsonBuilding() {
     loadJsonOptions(options: options)
     let configMgr = ConfigurationManager()
-    configMgr.load(options: jsonOptions)
-    let tracker = CloudFoundryDeploymentTracker(appEnv: appEnv, repositoryURL: testRepoURL)
-      guard let jsonResult = tracker.buildTrackerJson(appEnv: appEnv) else {
+    configMgr.load(jsonOptions)
+    let tracker = CloudFoundryDeploymentTracker(configMgr: configMgr, repositoryURL: testRepoURL)
+      guard let jsonResult = tracker.buildTrackerJson(configMgr: configMgr) else {
         XCTFail("Failed to receive json from build tracker method.")
         return
       }
@@ -98,11 +98,10 @@ class MainTests: XCTestCase {
 
   func testNumerousServiceJson() {
     loadJsonOptions(options: optionsTwo)
-    let appEnv = ConfigurationManager()
-    /*
-    appEnv.load(options: jsonOptions)
-    let tracker = CloudFoundryDeploymentTracker(appEnv: appEnv, repositoryURL: testRepoURL, codeVersion: testCodeVersion)
-    guard let jsonResult = tracker.buildTrackerJson(appEnv: appEnv) else {
+    let configMgr = ConfigurationManager()
+    configMgr.load(jsonOptions)
+    let tracker = CloudFoundryDeploymentTracker(configMgr: configMgr, repositoryURL: testRepoURL, codeVersion: testCodeVersion)
+    guard let jsonResult = tracker.buildTrackerJson(configMgr: configMgr) else {
       XCTFail("Failed to receive json from build tracker method.")
       return
     }
@@ -143,7 +142,6 @@ class MainTests: XCTestCase {
     let expectedPlans = ["Free", "Shared"]
     for (index, value) in plans.enumerated() {
       XCTAssertEqual(value, expectedPlans[index])
-    }*/
+    }
   }
-
 }
