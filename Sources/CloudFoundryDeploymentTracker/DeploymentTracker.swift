@@ -33,7 +33,7 @@ public struct CloudFoundryDeploymentTracker {
     self.codeVersion = codeVersion
     initLogger()
     let configMgr = ConfigurationManager()
-    configMgr.load(file: "config.json").load(.environmentVariables)
+    configMgr.load(.environmentVariables)
   }
 
   public init(configMgr: ConfigurationManager, repositoryURL: String, codeVersion: String? = nil) {
