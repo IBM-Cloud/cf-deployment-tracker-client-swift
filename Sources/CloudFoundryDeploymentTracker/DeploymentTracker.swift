@@ -15,14 +15,16 @@
 **/
 
 import Foundation
+import Configuration
 import CloudFoundryEnv
+import CloudFoundryConfig
 import HeliumLogger
 import LoggerAPI
 import KituraNet
 
 public struct CloudFoundryDeploymentTracker {
 
-  var appEnv: AppEnv?
+  var appEnv: ConfigurationManager?
   var repositoryURL: String
   var codeVersion: String?
 
@@ -30,14 +32,11 @@ public struct CloudFoundryDeploymentTracker {
     self.repositoryURL = repositoryURL
     self.codeVersion = codeVersion
     initLogger()
-    do {
-      appEnv = try CloudFoundryEnv.getAppEnv()
-    } catch {
-      Log.verbose("Couldn't get Cloud Foundry App environment instance...")
-    }
+    let appEnv = ConfigurationManager()
+    appEnv.load(file: "config.json").load(.environmentVariables)
   }
 
-  public init(appEnv: AppEnv, repositoryURL: String, codeVersion: String? = nil) {
+  public init(appEnv: ConfigurationManager, repositoryURL: String, codeVersion: String? = nil) {
     self.repositoryURL = repositoryURL
     self.codeVersion = codeVersion
     initLogger()
@@ -91,7 +90,7 @@ public struct CloudFoundryDeploymentTracker {
   /// - parameter appEnv: application environment to pull Bluemix app data from
   ///
   /// - returns: JSON, assuming we have access to application info
-  public func buildTrackerJson(appEnv: AppEnv) -> [String:Any]? {
+  public func buildTrackerJson(appEnv: ConfigurationManager) -> [String:Any]? {
       var jsonEvent: [String:Any] = [:]
       guard let vcapApplication = appEnv.getApp() else {
         Log.verbose("Couldn't get Cloud Foundry App instance... maybe running locally and not on the cloud?")
@@ -121,13 +120,12 @@ public struct CloudFoundryDeploymentTracker {
       jsonEvent["application_id"] = vcapApplication.id
       jsonEvent["application_version"] = vcapApplication.version
       jsonEvent["application_uris"] = vcapApplication.uris
-      jsonEvent["instance_index"] = vcapApplication.instanceIndex
 
       let services = appEnv.getServices()
       if services.count > 0 {
-        var serviceDictionary = [String: Any]()
+        var serviceDictionary = [String:Any]()
         for (_, service) in services {
-            if var serviceStats = serviceDictionary[service.label] as? [String: Any] {
+            if var serviceStats = serviceDictionary[service.label] as? [String:Any] {
             if let count = serviceStats["count"] as? Int {
                 serviceStats["count"] = count + 1
             }
@@ -137,7 +135,7 @@ public struct CloudFoundryDeploymentTracker {
             }
             serviceDictionary[service.label] = serviceStats
           } else {
-            var newService = [String: Any]()
+            var newService = [String:Any]()
             newService["count"] = 1
             newService["plans"] = service.plan.components(separatedBy: ", ")
             serviceDictionary[service.label] = newService
