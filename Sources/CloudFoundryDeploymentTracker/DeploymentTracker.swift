@@ -120,12 +120,13 @@ public struct CloudFoundryDeploymentTracker {
       jsonEvent["application_id"] = vcapApplication.id
       jsonEvent["application_version"] = vcapApplication.version
       jsonEvent["application_uris"] = vcapApplication.uris
+      jsonEvent["instance_index"] = vcapApplication.instanceIndex
 
       let services = appEnv.getServices()
       if services.count > 0 {
-        var serviceDictionary = [String:Any]()
+        var serviceDictionary = [String: Any]()
         for (_, service) in services {
-            if var serviceStats = serviceDictionary[service.label] as? [String:Any] {
+            if var serviceStats = serviceDictionary[service.label] as? [String: Any] {
             if let count = serviceStats["count"] as? Int {
                 serviceStats["count"] = count + 1
             }
@@ -135,7 +136,7 @@ public struct CloudFoundryDeploymentTracker {
             }
             serviceDictionary[service.label] = serviceStats
           } else {
-            var newService = [String:Any]()
+            var newService = [String: Any]()
             newService["count"] = 1
             newService["plans"] = service.plan.components(separatedBy: ", ")
             serviceDictionary[service.label] = newService
