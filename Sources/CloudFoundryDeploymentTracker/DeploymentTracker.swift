@@ -18,7 +18,6 @@ import Foundation
 import Configuration
 import CloudFoundryEnv
 import CloudFoundryConfig
-import HeliumLogger
 import LoggerAPI
 import KituraNet
 
@@ -31,7 +30,6 @@ public struct CloudFoundryDeploymentTracker {
   public init(repositoryURL: String, codeVersion: String? = nil) {
     self.repositoryURL = repositoryURL
     self.codeVersion = codeVersion
-    initLogger()
     let configMgr = ConfigurationManager()
     configMgr.load(.environmentVariables)
   }
@@ -39,15 +37,9 @@ public struct CloudFoundryDeploymentTracker {
   public init(configMgr: ConfigurationManager, repositoryURL: String, codeVersion: String? = nil) {
     self.repositoryURL = repositoryURL
     self.codeVersion = codeVersion
-    initLogger()
     self.configMgr = configMgr
   }
 
-  private func initLogger() {
-    if Log.logger == nil {
-      Log.logger = HeliumLogger()
-    }
-  }
 
   /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
