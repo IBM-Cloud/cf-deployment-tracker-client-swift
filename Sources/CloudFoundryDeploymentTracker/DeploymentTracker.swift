@@ -67,7 +67,7 @@ public struct CloudFoundryDeploymentTracker {
             Log.error("Bad JSON doc received from deployment tracker.")
           }
         } else {
-          Log.error("Failed to send tracking data with status code: \(response?.status)")
+          Log.error("Failed to send tracking data with status code: \(String(describing: response?.status))")
         }
       }
       req.end(jsonData)
