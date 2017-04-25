@@ -140,8 +140,8 @@ class MainTests: XCTestCase {
     plans = cloudantStats["plans"] as! [String]
     XCTAssertEqual(plans.count, 2)
     let expectedPlans = ["Free", "Shared"]
-    for (index, value) in plans.enumerated() {
-      XCTAssertEqual(value, expectedPlans[index])
+    for index in 0..<plans.count {
+        XCTAssertTrue(plans.contains(expectedPlans[index]))
     }
   }
 }
