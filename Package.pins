@@ -1,54 +1,5 @@
 {
-  "autoPin": true,
-  "pins": [
-    {
-      "package": "CCurl",
-      "reason": null,
-      "repositoryURL": "https://github.com/IBM-Swift/CCurl.git",
-      "version": "0.2.3"
-    },
-    {
-      "package": "CloudConfiguration",
-      "reason": null,
-      "repositoryURL": "https://github.com/IBM-Swift/CloudConfiguration.git",
-      "version": "2.0.0"
-    },
-    {
-      "package": "CloudFoundryEnv",
-      "reason": null,
-      "repositoryURL": "https://github.com/IBM-Swift/Swift-cfenv.git",
-      "version": "4.0.0"
-    },
-    {
-      "package": "Configuration",
-      "reason": null,
-      "repositoryURL": "https://github.com/IBM-Swift/Configuration.git",
-      "version": "0.2.4"
-    },
-    {
-      "package": "Kitura-net",
-      "reason": null,
-      "repositoryURL": "https://github.com/IBM-Swift/Kitura-net.git",
-      "version": "1.7.0"
-    },
-    {
-      "package": "LoggerAPI",
-      "reason": null,
-      "repositoryURL": "https://github.com/IBM-Swift/LoggerAPI.git",
-      "version": "1.7.0"
-    },
-    {
-      "package": "SSLService",
-      "reason": null,
-      "repositoryURL": "https://github.com/IBM-Swift/BlueSSLService.git",
-      "version": "0.12.30"
-    },
-    {
-      "package": "Socket",
-      "reason": null,
-      "repositoryURL": "https://github.com/IBM-Swift/BlueSocket.git",
-      "version": "0.12.41"
-    }
-  ],
+  "autoPin": false,
+  "pins": [],
   "version": 1
 }
