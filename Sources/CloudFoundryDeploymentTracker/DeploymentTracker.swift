@@ -23,16 +23,9 @@ import KituraNet
 
 public struct CloudFoundryDeploymentTracker {
 
-  var configMgr: ConfigurationManager?
-  var repositoryURL: String
+  let configMgr: ConfigurationManager
+  let repositoryURL: String
   var codeVersion: String?
-
-  public init(repositoryURL: String, codeVersion: String? = nil) {
-    self.repositoryURL = repositoryURL
-    self.codeVersion = codeVersion
-    let configMgr = ConfigurationManager()
-    configMgr.load(.environmentVariables)
-  }
 
   public init(configMgr: ConfigurationManager, repositoryURL: String, codeVersion: String? = nil) {
     self.repositoryURL = repositoryURL
@@ -40,12 +33,19 @@ public struct CloudFoundryDeploymentTracker {
     self.configMgr = configMgr
   }
 
+  public init(repositoryURL: String, codeVersion: String? = nil) {
+    let configMgr = ConfigurationManager()
+    configMgr.load(.environmentVariables)
+    self.init(configMgr: configMgr, repositoryURL: repositoryURL, codeVersion: codeVersion)
+  }
 
-  /// Sends off http post request to tracking service, simply logging errors on failure
+  /// Sends off HTTP post request to tracking service, simply logging errors on failure
   public func track() {
-    if let configMgr = configMgr, let trackerJson = buildTrackerJson(configMgr: configMgr),
+    Log.verbose("About to construct http request for cf-deployment-tracker-service...")
+    if let trackerJson = buildTrackerJson(configMgr: configMgr),
        let jsonData = try? JSONSerialization.data(withJSONObject: trackerJson) {
 
+      Log.verbose("JSON payload for cf-deployment-tracker-service is: \(jsonData)")
       var requestOptions: [ClientRequest.Options] = []
       requestOptions.append(.method("POST"))
       requestOptions.append(.schema("https://"))
@@ -54,6 +54,7 @@ public struct CloudFoundryDeploymentTracker {
       requestOptions.append(.path("/api/v1/track"))
       let headers = ["Content-Type": "application/json"]
       requestOptions.append(.headers(headers))
+      Log.verbose("Successfully built HTTP request options for cf-deployment-tracker-service...")
 
       let req = HTTP.request(requestOptions) { response in
         if let response = response, response.statusCode == HTTPStatusCode.OK || response.statusCode == HTTPStatusCode.created {
@@ -71,9 +72,9 @@ public struct CloudFoundryDeploymentTracker {
         }
       }
       req.end(jsonData)
+      Log.verbose("Successfully sent HTTP request to cf-deployment-tracker-service...")
     } else {
       Log.verbose("Failed to build valid JSON payload for deployment tracker... maybe running locally and not on the cloud?")
-      return
     }
   }
 
@@ -89,6 +90,7 @@ public struct CloudFoundryDeploymentTracker {
         return nil
       }
 
+      Log.verbose("Preparing dictionary payload for cf-deployment-tracker-service...")
       let dateFormatter = DateFormatter()
       #if os(OSX)
         //dateFormatter.calendar = Calendar(identifier: .iso8601)
@@ -114,6 +116,7 @@ public struct CloudFoundryDeploymentTracker {
       jsonEvent["application_uris"] = vcapApplication.uris
       jsonEvent["instance_index"] = vcapApplication.instanceIndex
 
+      Log.verbose("Verifying services bound to application...")
       let services = configMgr.getServices()
       if services.count > 0 {
         var serviceDictionary = [String: Any]()
@@ -136,6 +139,8 @@ public struct CloudFoundryDeploymentTracker {
         }
         jsonEvent["bound_vcap_services"] = serviceDictionary
       }
+      Log.verbose("Finished preparing dictionary payload for cf-deployment-tracker-service.")
+      Log.verbose("Dictionary payload for cf-deployment-tracker-service is: \(jsonEvent)")
       return jsonEvent
   }
 

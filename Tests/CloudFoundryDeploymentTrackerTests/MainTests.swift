@@ -33,7 +33,8 @@ class MainTests: XCTestCase {
   static var allTests: [(String, (MainTests) -> () throws -> Void)] {
     return [
       ("testTrackerJsonBuilding", testTrackerJsonBuilding),
-      ("testNumerousServiceJson", testNumerousServiceJson)
+      ("testNumerousServiceJson", testNumerousServiceJson),
+      ("testSerialization", testSerialization)
     ]
   }
 
@@ -143,5 +144,22 @@ class MainTests: XCTestCase {
     for index in 0..<plans.count {
         XCTAssertTrue(plans.contains(expectedPlans[index]))
     }
+  }
+
+  func testSerialization() {
+    loadJsonOptions(options: optionsTwo)
+    let configMgr = ConfigurationManager()
+    configMgr.load(jsonOptions)
+    let tracker = CloudFoundryDeploymentTracker(configMgr: configMgr, repositoryURL: testRepoURL)
+    guard let dictionaryPayload = tracker.buildTrackerJson(configMgr: configMgr) else {
+      XCTFail("Failed to receive json from build tracker method.")
+      return
+    }
+
+    guard let _ = try? JSONSerialization.data(withJSONObject: dictionaryPayload) else {
+      XCTFail("Failed to serialize dictionary data into JSON.")
+      return
+    }
+
   }
 }
