@@ -39,12 +39,13 @@ public struct CloudFoundryDeploymentTracker {
     self.init(configMgr: configMgr, repositoryURL: repositoryURL, codeVersion: codeVersion)
   }
 
-  /// Sends off http post request to tracking service, simply logging errors on failure
+  /// Sends off HTTP post request to tracking service, simply logging errors on failure
   public func track() {
     Log.verbose("About to construct http request for cf-deployment-tracker-service...")
     if let trackerJson = buildTrackerJson(configMgr: configMgr),
        let jsonData = try? JSONSerialization.data(withJSONObject: trackerJson) {
 
+      Log.verbose("JSON payload for cf-deployment-tracker-service is: \(jsonData)")
       var requestOptions: [ClientRequest.Options] = []
       requestOptions.append(.method("POST"))
       requestOptions.append(.schema("https://"))
@@ -53,7 +54,7 @@ public struct CloudFoundryDeploymentTracker {
       requestOptions.append(.path("/api/v1/track"))
       let headers = ["Content-Type": "application/json"]
       requestOptions.append(.headers(headers))
-      Log.verbose("Successfully built http request options for cf-deployment-tracker-service...")
+      Log.verbose("Successfully built HTTP request options for cf-deployment-tracker-service...")
 
       let req = HTTP.request(requestOptions) { response in
         if let response = response, response.statusCode == HTTPStatusCode.OK || response.statusCode == HTTPStatusCode.created {
@@ -71,7 +72,7 @@ public struct CloudFoundryDeploymentTracker {
         }
       }
       req.end(jsonData)
-      Log.verbose("Successfully sent http request to cf-deployment-tracker-service...")
+      Log.verbose("Successfully sent HTTP request to cf-deployment-tracker-service...")
     } else {
       Log.verbose("Failed to build valid JSON payload for deployment tracker... maybe running locally and not on the cloud?")
     }
@@ -139,7 +140,7 @@ public struct CloudFoundryDeploymentTracker {
         jsonEvent["bound_vcap_services"] = serviceDictionary
       }
       Log.verbose("Finished preparing dictionary payload for cf-deployment-tracker-service.")
-      Log.verbose("Dictionary payload for cf-deployment-tracker-service: \(jsonEvent)")
+      Log.verbose("Dictionary payload for cf-deployment-tracker-service is: \(jsonEvent)")
       return jsonEvent
   }
 
