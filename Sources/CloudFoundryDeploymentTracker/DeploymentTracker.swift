@@ -40,7 +40,6 @@ public struct CloudFoundryDeploymentTracker {
     self.configMgr = configMgr
   }
 
-
   /// Sends off http post request to tracking service, simply logging errors on failure
   public func track() {
     if let configMgr = configMgr, let trackerJson = buildTrackerJson(configMgr: configMgr),
