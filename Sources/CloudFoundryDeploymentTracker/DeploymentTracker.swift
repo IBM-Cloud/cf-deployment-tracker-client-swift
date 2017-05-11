@@ -136,6 +136,7 @@ public struct CloudFoundryDeploymentTracker {
         }
         jsonEvent["bound_vcap_services"] = serviceDictionary
       }
+      Log.verbose("Dictionary payload for cf-deployment-tracker-service: \(jsonEvent)")
       return jsonEvent
   }
 
