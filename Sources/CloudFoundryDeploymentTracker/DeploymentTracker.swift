@@ -39,10 +39,11 @@ public struct CloudFoundryDeploymentTracker {
 
   /// Sends off HTTP post request to tracking service, simply logging errors on failure
   public func track() {
-    Log.verbose("About to construct http request for cf-deployment-tracker-service...")
+    Log.verbose("About to construct HTTP request for cf-deployment-tracker-service...")
     if let trackerJson = buildTrackerJson(configMgr: configMgr),
     let jsonData = try? JSONSerialization.data(withJSONObject: trackerJson) {
-      Log.verbose("JSON payload for cf-deployment-tracker-service is: \(jsonData)")
+      let jsonStr = String(data: jsonData, encoding: .utf8)
+      Log.verbose("JSON payload for cf-deployment-tracker-service is: \(String(describing: jsonStr))")
       // Build URL instance
       guard let url = URL(string: "https://deployment-tracker.mybluemix.net:443/api/v1/track") else {
         Log.verbose("Failed to create URL object to connect to cf-deployment-tracker-service...")
@@ -66,7 +67,7 @@ public struct CloudFoundryDeploymentTracker {
         // OK = 200, CREATED = 201
         if httpResponse.statusCode == 200 || httpResponse.statusCode == 201 {
           if let data = data, let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) {
-            Log.info("Deployment Tracker response: \(jsonResponse)")
+            Log.info("cf-deployment-tracker-service response: \(jsonResponse)")
           } else {
             Log.error("Bad JSON payload received from cf-deployment-tracker-service.")
           }
