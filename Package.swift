@@ -26,7 +26,6 @@ let package = Package(
     ],
     dependencies: [
       .Package(url: "https://github.com/IBM-Swift/CloudConfiguration.git", majorVersion: 2),
-      .Package(url: "https://github.com/IBM-Swift/LoggerAPI.git", majorVersion: 1),
-      .Package(url: "https://github.com/IBM-Swift/Kitura-net.git", majorVersion: 1)
+      .Package(url: "https://github.com/IBM-Swift/LoggerAPI.git", majorVersion: 1)
     ]
 )
