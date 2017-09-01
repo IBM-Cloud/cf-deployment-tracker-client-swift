@@ -21,10 +21,8 @@
 #endif
 
 import XCTest
-import Foundation
 import CloudFoundryEnv
 import Configuration
-import CloudFoundryConfig
 
 @testable import CloudFoundryDeploymentTracker
 

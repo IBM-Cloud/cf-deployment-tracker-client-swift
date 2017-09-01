@@ -17,7 +17,6 @@
 import Foundation
 import Configuration
 import CloudFoundryEnv
-import CloudFoundryConfig
 import LoggerAPI
 
 public struct CloudFoundryDeploymentTracker {

@@ -14,6 +14,7 @@ The cf deployment tracker for Swift is a package used to track number of deploym
 - The 0.8.x releases were tested on macOS and Linux using the Swift `3.0.1` binaries and are not dependent on SwiftyJSON.
 - The 0.9.x, 1.0.x, and 2.0.x releases were tested on macOS and Linux using the Swift `3.0.2` binaries.
 - The 3.0.x releases were tested on macOS and Linux using the Swift `3.1` and `3.1.1` binaries.
+- The 4.0.x releases were tested on macOS and Linux using the Swift `3.1.1` binaries.
 
 You can download different versions of the Swift binaries by following this [link](https://swift.org/download/).
 
@@ -29,7 +30,7 @@ You can download different versions of the Swift binaries by following this [lin
 	     ...
 
 	     dependencies: [
-	         .Package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", majorVersion: 3, minor: 0),
+	         .Package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", majorVersion: 4),
 
 	         ...
 
