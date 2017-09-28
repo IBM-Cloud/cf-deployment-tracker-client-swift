@@ -1,6 +1,3 @@
-// swift-tools-version:4.0
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
 /**
  * Copyright IBM Corporation 2016, 2017
  *
@@ -21,24 +18,14 @@ import PackageDescription
 
 let package = Package(
     name: "CloudFoundryDeploymentTracker",
-    products: [
-      .library(
+    targets: [
+      Target(
         name: "CloudFoundryDeploymentTracker",
-        targets: ["CloudFoundryDeploymentTracker"]
-      )
+        dependencies: []
+      ),
     ],
     dependencies: [
-      .package(url: "https://github.com/IBM-Swift/Swift-cfenv.git", .upToNextMajor(from: "5.0.0")),
-      .package(url: "https://github.com/IBM-Swift/LoggerAPI.git", .upToNextMajor(from: "2.0.0"))
-    ],
-    targets: [
-      .target(
-        name: "CloudFoundryDeploymentTracker",
-        dependencies: ["CloudFoundryEnv", "LoggerAPI"]
-      ),
-      .testTarget(
-        name: "CloudFoundryDeploymentTrackerTests",
-        dependencies: ["CloudFoundryDeploymentTracker"]
-      )
+      .Package(url: "https://github.com/IBM-Swift/Swift-cfenv.git", majorVersion: 4),
+      .Package(url: "https://github.com/IBM-Swift/LoggerAPI.git", majorVersion: 1)
     ]
 )
