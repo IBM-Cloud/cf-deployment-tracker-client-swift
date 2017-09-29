@@ -1,5 +1,4 @@
-[![Build Status - Develop](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-client-swift.svg?branch=develop)](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-client-swift)
-[![Swift][swift-badge]][swift-url]
+[![Build Status - Master](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-client-swift.svg?branch=master)](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-client-swift)
 [![Platform][platform-badge]][platform-url]
 
 # Overview
@@ -30,8 +29,12 @@ You can download different versions of the Swift binaries by following this [lin
 	     ...
 
 	     dependencies: [
+	     
+	     	// Swift 3.1.1
 	         .Package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", majorVersion: 4),
-
+		 
+		 // Swift 4.0
+		.package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", .upToNextMajor(from: "4.0.0"),
 	         ...
 
 	     ])
@@ -76,7 +79,5 @@ Please see the README for the sample application (i.e. [Kitura-Starter](https://
 ## License
 This Swift package is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
 
-[swift-badge]: https://img.shields.io/badge/Swift-3.1.1-orange.svg
-[swift-url]: https://swift.org
 [platform-badge]: https://img.shields.io/badge/Platforms-OS%20X%20--%20Linux-lightgray.svg
 [platform-url]: https://swift.org
