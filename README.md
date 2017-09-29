@@ -34,7 +34,7 @@ You can download different versions of the Swift binaries by following this [lin
 	         .Package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", majorVersion: 4),
 		 
 		 // Swift 4.0
-		.package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", .upToNextMajor(from: "4.0.0"),
+		.package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", .upToNextMajor(from: "4.0.0")),
 	         ...
 
 	     ])
