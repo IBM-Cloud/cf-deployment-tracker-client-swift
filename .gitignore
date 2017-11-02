@@ -1,5 +1,4 @@
 .build/*
-CloudFoundryDeploymentTracker.xcodeproj/project.xcworkspace/xcuserdata/
-CloudFoundryDeploymentTracker.xcodeproj/xcuserdata/
-CloudFoundryDeploymentTracker.xcodeproj/
+.build-ubuntu/*
+*.xcodeproj/*
 Package.resolved

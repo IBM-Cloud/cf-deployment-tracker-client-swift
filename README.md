@@ -14,6 +14,7 @@ The cf deployment tracker for Swift is a package used to track number of deploym
 - The 0.9.x, 1.0.x, and 2.0.x releases were tested on macOS and Linux using the Swift `3.0.2` binaries.
 - The 3.0.x releases were tested on macOS and Linux using the Swift `3.1` and `3.1.1` binaries.
 - The 4.0.x releases were tested on macOS and Linux using the Swift `3.1.1` binaries and `4.0` binaries.
+- The 5.0.x releases were tested on macOS and Linux using the Swift `4.0` binaries.
 
 You can download different versions of the Swift binaries by following this [link](https://swift.org/download/).
 
@@ -24,17 +25,16 @@ You can download different versions of the Swift binaries by following this [lin
 	 import PackageDescription
 
 	 let package = Package(
-	     name: "MyAwesomeSwiftProject",
+		name: "MyAwesomeSwiftProject",
 
-	     ...
+	    ...
 
-	     dependencies: [
+	    dependencies: [
+			.package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", .upToNextMajor(from: "5.0.0")),
+	        ...
 
-		 // Swift 4.0
-		.package(url: "https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift.git", .upToNextMajor(from: "4.0.0")),
-	         ...
-
-	     ])
+	    ]
+	)
 	```
 2. Once the Package.swift file of your application has been updated accordingly, you can import the `CloudFoundryDeploymentTracker` module in your code. Additionally, you will need to initialize the CloudFoundryDeploymentTracker and call the `track()` method, as seen here:
 
@@ -56,7 +56,7 @@ To see how to include this package into your app, please visit [Kitura-Starter](
 ## Privacy Notice
 ```
 ## Privacy Notice
-This Swift application includes code to track deployments to [IBM Bluemix](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/IBM-Bluemix/cf-deployment-tracker-service) service on each deployment:
+This Swift application includes code to track deployments to [IBM Cloud](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/IBM-Bluemix/cf-deployment-tracker-service) service on each deployment:
 
 * Swift project code version (if provided)
 * Swift project repository URL
@@ -67,7 +67,7 @@ This Swift application includes code to track deployments to [IBM Bluemix](https
 * Labels of bound services
 * Number of instances for each bound service and associated plan information
 
-This data is collected from the parameters of the `CloudFoundryDeploymentTracker`, the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Bluemix and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
+This data is collected from the parameters of the `CloudFoundryDeploymentTracker`, the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Cloud and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Cloud to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
 
 ### Disabling Deployment Tracking
 Please see the README for the sample application (i.e. [Kitura-Starter](https://github.com/IBM-Bluemix/Kitura-Starter)) that includes this package for instructions on disabling deployment tracking, as the instructions may vary based on the sample application in which this package is included.
