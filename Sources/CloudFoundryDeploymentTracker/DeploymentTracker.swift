@@ -19,7 +19,7 @@ import Configuration
 import CloudFoundryEnv
 import LoggerAPI
 
-@available(*, deprecated, message: "CloudFoundryDeploymentTracker has been deprectated. We recommend using the Metrics Collector Service (https://github.com/IBM/metrics-collector-client-swift) instead")
+@available(*, deprecated, message: "CloudFoundryDeploymentTracker has been deprecated. We recommend using the Metrics Collector Service (https://github.com/IBM/metrics-collector-client-swift) instead")
 public struct CloudFoundryDeploymentTracker {
   let configMgr: ConfigurationManager
   let repositoryURL: String
