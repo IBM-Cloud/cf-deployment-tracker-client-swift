@@ -1,6 +1,8 @@
 [![Build Status - Master](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-client-swift.svg?branch=master)](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-client-swift)
 [![Platform][platform-badge]][platform-url]
 
+🚫 This project is no longer maintained. We recommend using [Metrics Collector Service](https://github.com/IBM/metrics-collector-client-swift) instead.
+
 # Overview
 The cf deployment tracker for Swift is a package used to track number of deployments to IBM Cloud for a particular Swift project. This Swift package requires little setup and allows IBMers to view deployment stats on the [Deployment Tracker](https://deployment-tracker.mybluemix.net/stats), for their demo/tutorial projects. If you'd like, you can include a deployment count badge in your project's README:
 
