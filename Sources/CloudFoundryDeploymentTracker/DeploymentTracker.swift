@@ -19,6 +19,7 @@ import Configuration
 import CloudFoundryEnv
 import LoggerAPI
 
+@available(*, deprecated, message: "CloudFoundryDeploymentTracker has been deprecated. We recommend using the Metrics Collector Service (https://github.com/IBM/metrics-collector-client-swift) instead")
 public struct CloudFoundryDeploymentTracker {
   let configMgr: ConfigurationManager
   let repositoryURL: String
@@ -37,49 +38,9 @@ public struct CloudFoundryDeploymentTracker {
   }
 
   /// Sends off HTTP post request to tracking service, simply logging errors on failure
+  @available(*, deprecated, message: "track() has been deprecated. The track method does not execute any commands.")
   public func track() {
-    Log.verbose("About to construct HTTP request for cf-deployment-tracker-service...")
-    if let trackerJson = buildTrackerJson(configMgr: configMgr),
-    let jsonData = try? JSONSerialization.data(withJSONObject: trackerJson) {
-      let jsonStr = String(data: jsonData, encoding: .utf8)
-      Log.verbose("JSON payload for cf-deployment-tracker-service is: \(String(describing: jsonStr))")
-      // Build URL instance
-      guard let url = URL(string: "https://deployment-tracker.mybluemix.net:443/api/v1/track") else {
-        Log.verbose("Failed to create URL object to connect to cf-deployment-tracker-service...")
-        return
-      }
-      var request = URLRequest(url: url)
-      request.httpMethod = "POST"
-      request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-      request.httpBody = jsonData
-
-      // Build task for request
-      let requestTask = URLSession(configuration: .default).dataTask(with: request) {
-        data, response, error in
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-          Log.error("Failed to send tracking data to cf-deployment-tracker-service: \(String(describing: error))")
-          return
-        }
-
-        Log.info("HTTP response code: \(httpResponse.statusCode)")
-        // OK = 200, CREATED = 201
-        if httpResponse.statusCode == 200 || httpResponse.statusCode == 201 {
-          if let data = data, let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) {
-            Log.info("cf-deployment-tracker-service response: \(jsonResponse)")
-          } else {
-            Log.error("Bad JSON payload received from cf-deployment-tracker-service.")
-          }
-        } else {
-          Log.error("Failed to send tracking data to cf-deployment-tracker-service.")
-        }
-      }
-      Log.verbose("Successfully built HTTP request options for cf-deployment-tracker-service.")
-      requestTask.resume()
-      Log.verbose("Sent HTTP request to cf-deployment-tracker-service...")
-    } else {
-      Log.verbose("Failed to build valid JSON payload for deployment tracker... maybe running locally and not on the cloud?")
-    }
+    Log.warning("The repository has been deprecated. The track method does not execute any commands.")
   }
 
   /// Helper method to build Json in a valid format for tracking service
